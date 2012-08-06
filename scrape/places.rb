@@ -11,26 +11,32 @@ Bundler.require
 @read_collection = @db['raw_ratings']
 i = 0
 
-@read_collection.find.each do |place|
-  begin
-    location = "#{place['Geocode']['Longitude']},#{place['Geocode']['Latitude']}"
-    sensor = false
-    types = 'food'
-    key = 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
-    rankby = 'distance'
+catch :done_enough do
+  @read_collection.find.each do |place|
+    begin
+      location = "#{place['Geocode']['Longitude']},#{place['Geocode']['Latitude']}"
+      sensor = false
+      types = 'food'
+      key = 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
+      rankby = 'distance'
 
-    url = "https://maps.googleapis.com/maps/api/place/search/json?key=#{key}&location=#{location}&sensor=#{sensor}&rankby=#{rankby}&types=#{types}"
-    response = JSON.parse open(url).read
-    if response["status"] == "OK"
-      response["results"].each do |result|
-        details_url = "https://maps.googleapis.com/maps/api/place/details/json?key=#{key}&reference=#{result['reference']}&sensor=#{sensor}"
-        details = JSON.parse(open(details_url).read)['result']
-        @collection.insert details
-        puts "Inserting #{i}"
-        i += 1
+      url = "https://maps.googleapis.com/maps/api/place/search/json?key=#{key}&location=#{location}&sensor=#{sensor}&rankby=#{rankby}&types=#{types}"
+      response = JSON.parse open(url).read
+      if response["status"] == "OK"
+        response["results"].each do |result|
+          details_url = "https://maps.googleapis.com/maps/api/place/details/json?key=#{key}&reference=#{result['reference']}&sensor=#{sensor}"
+          details = JSON.parse(open(details_url).read)['result']
+          @collection.insert details
+          puts "Inserting #{i}"
+          i += 1
+
+          throw :done_enough if i > 30      
+        end
       end
-    end
-  rescue Exception => e
-    puts "Failed - #{e}"
+    rescue Exception => e
+      puts "Failed - #{e}"
   end
 end
+end
+
+@collection.ensure_index [["geometry.location", Mongo::GEO2D]]
