@@ -1,0 +1,6 @@
+source :rubygems
+
+gem 'crack'
+gem 'mongo'
+gem 'bson_ext'
+gem 'json'
