@@ -51,8 +51,8 @@ end
   details = place.clone
   details["location"] = 
     {
-      :latitude => place["Geocode"].first,
-      :longitude => place["Geocode"].last
+      :latitude => place["Geocode"].last,
+      :longitude => place["Geocode"].first
     }
   details.delete "Geocode"
 

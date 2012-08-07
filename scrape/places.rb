@@ -14,7 +14,7 @@ i = 0
 catch :done_enough do
   @read_collection.find.each do |place|
     if place['Geocode']
-      location = place['Geocode'].join ','
+      location = place['Geocode'].reverse.join ','
       sensor = false
       types = 'food'
       key = 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
