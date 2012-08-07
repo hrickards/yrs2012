@@ -7,6 +7,7 @@ GEM
     crack (0.3.1)
     faker (1.0.1)
       i18n (~> 0.4)
+    fast-stemmer (1.0.1)
     i18n (0.6.0)
     json (1.7.4)
     mongo (1.6.4)
@@ -20,6 +21,7 @@ DEPENDENCIES
   bson_ext
   crack
   faker
+  fast-stemmer
   json
   mongo
   psych
