@@ -7,13 +7,31 @@
 <?php
 include 'functions.php';
 
-$locarr = array(
-	//    array(Place Name, Place Rating, Longitude, Lattitude)
-	array(addslashes("Local Authority"), -1, 50.83483000000000, -0.20667300000000),
-	array(addslashes("24 Convenience Store"), 5, 50.82409300000000, -0.13839100000000),
-	array(addslashes("24 St George's Restaurant"), 3, 50.83483000000000, -0.20667300000000)
+$m = new Mongo('mongodb://178.79.184.102:27017');
+$db = $m->selectDB('fud');
+$col = $db->selectCollection('places');
+$cursorlimit = 40;
+$cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
+
+for($i=1;$i<$cursorlimit+1;$i+=1){
+	$cur = $cursor->getNext();
+	$place_items .= '[\'<div class="infobox" >';
 	
-);
+	$comp_items .= '<div class="compbox" >';
+	
+	add_field(true,'name', addslashes($cur['business_name']).'<hr/>');
+	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
+	add_field(true,'type','<strong>Type:</strong> '.$cur['business_type']);
+	add_field(false,'address','<strong>Address:</strong><br/>'.addslashes($cur['address_line1']).'<br/>'.addslashes($cur['address_line2']).'<br/>'.addslashes($cur['address_line3']).'<br/>'.addslashes($cur['address_line4']));
+	
+	$comp_items .= '</div><br/>';
+	
+	$place_items .= '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
+	if($i<$cursorlimit){
+		$place_items .= ','."\n";
+	}
+}
+
 
 ?>
 
@@ -21,23 +39,27 @@ $locarr = array(
 
 <body>
 
+
+<div class="intro_box box">
+		Intro Box
+	</div>
+	
+	<div id = "comparebox" class="comparison_box box">
+		<?php
+			echo $comp_items;
+		?>
+	</div>
+	
+	<div class="search_box box">
+		<img src="img/fud_logo.png" />
+	</div>
+  
 <div id="map" style="width:100%;height:100%;" ></div>
 
   <script type="text/javascript">
     var locations = [
 		<?php
-			$i = 1;
-			foreach($locarr as &$location){
-				echo '[\'<div class="infobox" ><div class="info_placename"> '.$location[0].'</div><hr/>';
-				if($location[1]!=-1){
-					echo '<div class="info_placerating">'.get_stars('Hygiene Rating:',$location[1],'Images/star_enabled.gif','Images/star_disabled.gif').'</div>';
-				}
-				echo '</div>\', '.$location[2].', '.$location[3].', '.$i.']';
-				if($i<count($locarr)){
-					echo ',';
-				}
-				$i+=1;
-			}
+			echo $place_items;
 		?>
     ];
     
@@ -49,6 +71,17 @@ $locarr = array(
       center: new google.maps.LatLng(50.83483000000000, -0.20667300000000),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
+    
+    var styles = [{
+    stylers: [
+      { hue: "#ff9100" },
+      { lightness: 15 },
+      { saturation: 88 },
+      { gamma: 1.07 }
+      ]
+    }];
+    
+    map.setOptions({styles: styles});
 
     var infowindow = new google.maps.InfoWindow();
 
@@ -68,5 +101,10 @@ $locarr = array(
       })(marker, i));
     }
   </script>
-
+	
 <body>
+<?php
+
+include 'footer.php';
+
+?>
