@@ -1,9 +1,0 @@
-source :rubygems
-
-gem 'crack'
-gem 'mongo'
-gem 'bson_ext'
-gem 'json'
-gem 'faker'
-gem 'psych'
-gem 'fast-stemmer', :require => 'fast_stemmer'
