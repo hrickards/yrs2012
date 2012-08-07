@@ -27,8 +27,8 @@ def one_of_in(arr1, arr2)
 end
 
 def word_includes_word(word, str)
-  word = word.stem
-  str = str.stem
+  #word = word.stem
+  #str = str.stem
   str.include? word or str.include? (word << 's') or str.include? word[0..-2]
 end
 
