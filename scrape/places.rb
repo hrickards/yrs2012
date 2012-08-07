@@ -32,7 +32,7 @@ catch :done_enough do
           puts "Inserting #{i}"
           i += 1
 
-          throw :done_enough if i > 30      
+          #throw :done_enough if i > 30      
         end
       end
     end
