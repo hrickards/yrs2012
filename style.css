@@ -7,6 +7,11 @@ body {
 	margin:0px;
 }
 
+.infobox {
+	width:400px;
+	height:400px;
+}
+
 .info_placename {
 	font-size:18px;
 	width:100%;
@@ -19,4 +24,33 @@ body {
 
 .starbox_trailer {
 	padding-right:8px;
+}
+
+
+.box {
+	z-index:9999;
+}
+
+
+.intro_box {
+	position:absolute;
+}
+
+.comparison_box {
+	position:absolute;
+	height:100%;
+	width:150px;
+	background-color:#5E5E5E;
+	color:#FF9900;
+}
+
+.search_box {
+	width:100%;
+	height:30px;
+	position:absolute;
+	bottom:0;
+	background-color:#464646;
+	color:#DF7000;
+	padding-top:5px;
+	padding-bottom:0px;
 }

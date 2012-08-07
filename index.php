@@ -7,36 +7,43 @@
 <?php
 include 'functions.php';
 
-$locarr = array(
-	//    array(Place Name, Place Rating, Longitude, Lattitude)
-	array(addslashes("Local Authority"), -1, 50.83483000000000, -0.20667300000000),
-	array(addslashes("24 Convenience Store"), 5, 50.82409300000000, -0.13839100000000),
-	array(addslashes("24 St George's Restaurant"), 3, 50.83483000000000, -0.20667300000000)
-	
-);
-
+$m = new Mongo('mongodb://178.79.184.102:27017');
+$db = $m->selectDB('fud');
+$col = $db->selectCollection('places');
+$cursorlimit = 40;
+$cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 ?>
 
 </head>
 
 <body>
 
+
+<div class="intro_box box">
+		Intro Box
+	</div>
+	
+	<div class="comparison_box box">
+		
+	</div>
+	
+	<div class="search_box box">
+		<img src="img/fud_logo.png" />
+	</div>
+  
 <div id="map" style="width:100%;height:100%;" ></div>
 
   <script type="text/javascript">
     var locations = [
 		<?php
-			$i = 1;
-			foreach($locarr as &$location){
-				echo '[\'<div class="infobox" ><div class="info_placename"> '.$location[0].'</div><hr/>';
-				if($location[1]!=-1){
-					echo '<div class="info_placerating">'.get_stars('Hygiene Rating:',$location[1],'Images/star_enabled.gif','Images/star_disabled.gif').'</div>';
+			for($i=1;$i<$cursorlimit+1;$i+=1){
+				$cur = $cursor->getNext();
+				echo '[\'<div class="infobox" ><div class="info_placename"> '.addslashes($cur['business_name']).'</div><hr/>';
+				echo '<div class="info_placerating">'.get_stars('Hygiene Rating:',intval($cur['rating_value']),'img/star_enabled.gif','img/star_disabled.gif').'</div>';
+				echo '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
+				if($i<$cursorlimit){
+					echo ','."\n";
 				}
-				echo '</div>\', '.$location[2].', '.$location[3].', '.$i.']';
-				if($i<count($locarr)){
-					echo ',';
-				}
-				$i+=1;
 			}
 		?>
     ];
@@ -49,6 +56,17 @@ $locarr = array(
       center: new google.maps.LatLng(50.83483000000000, -0.20667300000000),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
+    
+    var styles = [{
+    stylers: [
+      { hue: "#ff9100" },
+      { lightness: 15 },
+      { saturation: 88 },
+      { gamma: 1.07 }
+      ]
+    }];
+    
+    map.setOptions({styles: styles});
 
     var infowindow = new google.maps.InfoWindow();
 
