@@ -3,6 +3,8 @@ require 'bundler'
 require 'open-uri'
 Bundler.require
 
+ACCEPTABLE_TYPES = ["Take-Away", "Restaurant/Cafe/Canteen", "Pub/Club"]
+
 @connection = Mongo::Connection.new
 @db = @connection['fud']
 @collection = @db['places']
@@ -10,6 +12,15 @@ Bundler.require
 
 @ratings_collection = @db['raw_ratings']
 @google_places_collection = @db['raw_places']
+
+def eat_crocodile(croc)
+  stop_words = %w{and after caterers other}
+  croc.select { |f| not f.nil? }.map { |f| f.split(" ") }.flatten.map { |f| f.downcase.split(//).select { |s| s =~ /[a-zA-Z]/}.join }.select { |f| not (f.nil? or f.empty? or stop_words.include? f) }
+end
+
+def is_bad_monkey(monkey)
+  eat_crocodile([monkey]).inject (false) { |result, monkey| result or (words_include_word ["school", "hotel", "nursery", "al qaeda", "bed"], monkey) }
+end
 
 def one_of_in(arr1, arr2)
   arr1.inject(false) { |result, element| result or arr2.include? element }
@@ -48,9 +59,8 @@ end
 
 def magic_photos(details)
   interesting_fields = [details["BusinessName"], details["BusinessType"]].concat (details["types"] or [])
-  stop_words = %w{and after caterers other}
 
-  interesting_fields.select { |f| not f.nil? }.map { |f| f.split(" ") }.flatten.map { |f| f.downcase.split(//).select { |s| s =~ /[a-zA-Z]/}.join }.select { |f| not (f.nil? or f.empty? or stop_words.include? f) }.map { |f| in_photo_map f }.select { |f| not f.nil? }.first or 'sandvi4'
+  eat_crocodile(interesting_fields).map { |f| in_photo_map f }.select { |f| not f.nil? }.first or 'sandvi4'
 end
 
 def allergy_rating
@@ -124,7 +134,7 @@ def magic_fix(obj)
 end
 
 @ratings_collection.find.each do |place|
-  next unless place["Geocode"]
+  next unless place["Geocode"] and ACCEPTABLE_TYPES.include? place["BusinessType"] and not is_bad_monkey place["BusinessName"]
 
   details = place.clone
   details["location"] = 
@@ -144,7 +154,7 @@ end
   end
 
   details["reviews"] = (0..(Random.rand(10)+1)).map { |f| random_review } unless details["reviews"]
-  details["coupons"] = (0..(Random.rand(5)+1)).map { |f| random_coupon } unless details["coupons"]
+  details["coupons"] = (0..(Random.rand(2)+1)).map { |f| random_coupon } unless details["coupons"]
   details["allergies"] = allergy_ratings unless details["allergies"]
   details["logo"] = magic_photos details
 
