@@ -6,3 +6,17 @@
 body {
 	margin:0px;
 }
+
+.info_placename {
+	font-size:18px;
+	width:100%;
+}
+
+.info_placerating {
+	font-size:12px;
+	width:100%;
+}
+
+.starbox_trailer {
+	padding-right:8px;
+}
