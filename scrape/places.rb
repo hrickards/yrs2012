@@ -13,8 +13,8 @@ i = 0
 
 catch :done_enough do
   @read_collection.find.each do |place|
-    begin
-      location = "#{place['Geocode']['Longitude']},#{place['Geocode']['Latitude']}"
+    if place['Geocode']
+      location = place['Geocode'].join ','
       sensor = false
       types = 'food'
       key = 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
@@ -26,6 +26,8 @@ catch :done_enough do
         response["results"].each do |result|
           details_url = "https://maps.googleapis.com/maps/api/place/details/json?key=#{key}&reference=#{result['reference']}&sensor=#{sensor}"
           details = JSON.parse(open(details_url).read)['result']
+          details["location"] = [details["geometry"]["location"]["lng"], details["geometry"]["location"]["lat"]]
+          details.delete "geometry"
           @collection.insert details
           puts "Inserting #{i}"
           i += 1
@@ -33,10 +35,8 @@ catch :done_enough do
           throw :done_enough if i > 30      
         end
       end
-    rescue Exception => e
-      puts "Failed - #{e}"
+    end
   end
 end
-end
 
-@collection.ensure_index [["geometry.location", Mongo::GEO2D]]
+@collection.ensure_index [["location", Mongo::GEO2D]]
