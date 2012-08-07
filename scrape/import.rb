@@ -38,21 +38,26 @@ end
 
 def in_photo_map(str)
   maps = {
-    :Mcd => ['mcdonalds', 'maccy ds', 'mcd', 'donald', 'mc', 'donalds'],
-    :bbq => ['bbq', 'barbecue', 'grill'],
-    :cofe => ['coffee', 'cofe', 'starbucks', 'costa', 'nero', 'republic', 'tea'],
-    :fortune_cookie => ['chinese', 'chineese'],
-    :hotdog => ['hotdog', 'dog', 'sausage', 'saussage'],
-    :myicon => ['burger'],
-    :organic => ['organic', 'salad'],
-    :pile => ['chicken', 'meat', 'beef', 'lamb', 'pork'],
-    :pizza => ['pizza', 'pizzas', 'dominoes', 'dominoes'],
-    :sandvi4 => ['sanwich', 'sandwhich', 'bread', 'sandwhiches'],
-    :steak => ['steak', 'steaks'],
-    :sushi => ['japanese', 'sushi', 'fish'],
-    :texmex => ['texan', 'mexican', 'chili', 'fajita'],
-    :thai => ['thai'],
-    :bar => ['tavern', 'bar', 'pub', 'public']
+    :mcdonalds => %w{mcdonalds maccy ds mcd donald mc donalds},
+    :bbq => %w{bbq barbecue grill},
+    :coffee => %w{coffee cofe starbucks costa nero republic tea},
+    :donoughts => %w{donoughts},
+    :cafe => %w{cafe kitchen cottage},
+    :chinese => %w{chinese chineese bengal china mandarin hong kong shanghai noodle rice wok oriental orient tandoori po sing wing hing shaan shema sitar nishat nayeb maharani levante chopstick},
+    :hotdog => %w{hotdog dog sausage saussage american},
+    :burger => %w{burger uncle},
+    :organic => %w{organic salad terre},
+    :chicken => %w{chicken meat beef lamb pork nandos nando kfc},
+    :pizza => %w{pizza pizzas dominoes dominoes mediterranean italian italy pasta spaghetti papa johns},
+    :sandwhich => %w{sanwich sandwhich sandwich sandwiches bread sandwhiches breakfast subway pasty crust pret manger roll},
+    :steak => %w{steak steaks},
+    :japanese => %w{japanese sushi moshi palace lobster},
+    :fish_and_chips => %w{cod fish haddock chippy chips sea seafood ocean pier catch beach fry gold},
+    :tex_mex => %w{texan mexican chili fajita},
+    :thai => %w{thai},
+    :indian => %w{india indian curry spicy balti},
+    :bar => %w{tavern bar pub public inn garden},
+    :ice_cream => %w{ice cream}
   }
 
   results = maps.select { |icon, words| words_include_word words, str }.map { |i, w| i.to_s }.first
