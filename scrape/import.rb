@@ -51,7 +51,8 @@ def in_photo_map(str)
     :steak => ['steak', 'steaks'],
     :sushi => ['japanese', 'sushi', 'fish'],
     :texmex => ['texan', 'mexican', 'chili', 'fajita'],
-    :thai => ['thai']
+    :thai => ['thai'],
+    :bar => ['tavern', 'bar', 'pub', 'public']
   }
 
   results = maps.select { |icon, words| words_include_word words, str }.map { |i, w| i.to_s }.first
