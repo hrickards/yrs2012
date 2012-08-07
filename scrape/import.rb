@@ -68,6 +68,27 @@ def allergy_ratings
   ratings
 end
 
+def random_coupon
+  description = case Random.rand(6)
+  when 0
+    "Kid's eat free with a full paying adult"
+  when 1
+    "#{Random.rand(4)+1}0% off the bill"
+  when 2
+    "Free dessert with any main course"
+  when 3
+    "#{Random.rand(4)+1}0% off pasta"
+  when 4
+    "#{Random.rand(2)+2} can dine for half-price"
+  when 5
+    "Free sides"
+  end
+
+  code = (0..(Random.rand(16)+1)).map { rand(36).to_s(36)}.join.upcase
+
+  {:description => description, :code => code}
+end
+
 def random_review
   {
     :aspects => [
@@ -78,7 +99,7 @@ def random_review
     ],
     :author_name => Faker::Name.name,
     :text => Faker::Lorem.paragraph,
-    :time => Time.now.to_i + ((Random.rand(1) == 0 ? 1 : (-1))*Random.rand(1814400))
+    :time => Time.now.to_i + ((Random.rand(2) == 0 ? 1 : (-1))*Random.rand(1814400))
   }
 end
 
@@ -123,11 +144,9 @@ end
   end
 
   details["reviews"] = (0..(Random.rand(10)+1)).map { |f| random_review } unless details["reviews"]
-  details["allergies"] = allergy_ratings
+  details["coupons"] = (0..(Random.rand(5)+1)).map { |f| random_coupon } unless details["coupons"]
+  details["allergies"] = allergy_ratings unless details["allergies"]
   details["logo"] = magic_photos details
-  if details["logo"] and details["logo"] != "sandvi4"
-    puts details["logo"]
-  end
 
   details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
   @collection.insert details
