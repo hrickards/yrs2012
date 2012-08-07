@@ -15,6 +15,20 @@ def one_of_in(arr1, arr2)
   arr1.inject(false) { |result, element| result or arr2.include? element }
 end
 
+def random_review
+  {
+    :aspects => [
+      {
+        :rating => Random.rand(5),
+        :type => 'overall'
+      }
+    ],
+    :author_name => Faker::Name.name,
+    :text => Faker::Lorem.paragraph,
+    :time => Time.now.to_i + ((Random.rand(1) == 0 ? 1 : (-1))*Random.rand(1814400))
+  }
+end
+
 def s_to_sym(s)
   s.gsub(" ", "_").gsub(/(.)([A-Z])/,'\1_\2').downcase.to_sym
 end
@@ -52,5 +66,8 @@ end
   end
 
   details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
+
+  details["reviews"] = (0..(Random.rand(10)+1)).map { |f| random_review } unless details["reviews"]
+
   @collection.insert details
 end
