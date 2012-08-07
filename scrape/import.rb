@@ -15,6 +15,22 @@ def one_of_in(arr1, arr2)
   arr1.inject(false) { |result, element| result or arr2.include? element }
 end
 
+def s_to_sym(s)
+  s.gsub(" ", "_").gsub(/(.)([A-Z])/,'\1_\2').downcase.to_sym
+end
+
+def magic_fix(obj)
+  if obj.is_a? String
+    s_to_sym obj
+  elsif obj.is_a? Array
+    obj.map { |o| magic_fix o }
+  elsif obj.is_a? Hash
+    Hash[obj.map { |k, v| [magic_fix(k), v] } ]
+  else
+    obj
+  end
+end
+
 @ratings_collection.find.each do |place|
   next unless place["Geocode"]
 
@@ -35,6 +51,6 @@ end
     details.merge! same_place
   end
 
-  details =  Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }.map { |key, value| [key.gsub(" ", "_").gsub(/(.)([A-Z])/,'\1_\2').downcase.to_sym, value] }]
+  details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
   @collection.insert details
 end
