@@ -15,6 +15,21 @@ def one_of_in(arr1, arr2)
   arr1.inject(false) { |result, element| result or arr2.include? element }
 end
 
+def allergy_rating
+  Random.rand(4)+1
+end
+
+def allergy_ratings
+  ratings_types = %w{peanuts dairy wheat fish_sesame tree_nuts eggs_gluten shellfish soy}
+  ratings = {}
+  ratings_types.each do |type|
+    if Random.rand(104) > 69
+      ratings[type.to_sym] = allergy_rating
+    end
+  end
+  ratings
+end
+
 def random_review
   {
     :aspects => [
@@ -30,7 +45,11 @@ def random_review
 end
 
 def s_to_sym(s)
-  s.gsub(" ", "_").gsub(/(.)([A-Z])/,'\1_\2').downcase.to_sym
+  if s.is_a? Symbol
+    s
+  else
+    s.gsub(" ", "_").gsub(/(.)([A-Z])/,'\1_\2').downcase.to_sym
+  end
 end
 
 def magic_fix(obj)
@@ -65,9 +84,9 @@ end
     details.merge! same_place
   end
 
-  details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
-
   details["reviews"] = (0..(Random.rand(10)+1)).map { |f| random_review } unless details["reviews"]
+  details["allergies"] = allergy_ratings
 
+  details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
   @collection.insert details
 end
