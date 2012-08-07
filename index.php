@@ -12,6 +12,27 @@ $db = $m->selectDB('fud');
 $col = $db->selectCollection('places');
 $cursorlimit = 40;
 $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
+
+for($i=1;$i<$cursorlimit+1;$i+=1){
+	$cur = $cursor->getNext();
+	$place_items .= '[\'<div class="infobox" >';
+	
+	$comp_items .= '<div class="compbox" >';
+	
+	add_field(true,'name', addslashes($cur['business_name']).'<hr/>');
+	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
+	add_field(true,'type','<strong>Type:</strong> '.$cur['business_type']);
+	add_field(false,'address','<strong>Address:</strong><br/>'.addslashes($cur['address_line1']).'<br/>'.addslashes($cur['address_line2']).'<br/>'.addslashes($cur['address_line3']).'<br/>'.addslashes($cur['address_line4']));
+	
+	$comp_items .= '</div><br/>';
+	
+	$place_items .= '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
+	if($i<$cursorlimit){
+		$place_items .= ','."\n";
+	}
+}
+
+
 ?>
 
 </head>
@@ -23,8 +44,10 @@ $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 		Intro Box
 	</div>
 	
-	<div class="comparison_box box">
-		
+	<div id = "comparebox" class="comparison_box box">
+		<?php
+			echo $comp_items;
+		?>
 	</div>
 	
 	<div class="search_box box">
@@ -36,15 +59,7 @@ $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
   <script type="text/javascript">
     var locations = [
 		<?php
-			for($i=1;$i<$cursorlimit+1;$i+=1){
-				$cur = $cursor->getNext();
-				echo '[\'<div class="infobox" ><div class="info_placename"> '.addslashes($cur['business_name']).'</div><hr/>';
-				echo '<div class="info_placerating">'.get_stars('Hygiene Rating:',intval($cur['rating_value']),'img/star_enabled.gif','img/star_disabled.gif').'</div>';
-				echo '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
-				if($i<$cursorlimit){
-					echo ','."\n";
-				}
-			}
+			echo $place_items;
 		?>
     ];
     
@@ -86,5 +101,10 @@ $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
       })(marker, i));
     }
   </script>
-
+	
 <body>
+<?php
+
+include 'footer.php';
+
+?>

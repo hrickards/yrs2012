@@ -5,24 +5,30 @@
 
 body {
 	margin:0px;
+	font:normal 14px "Trebuchet MS", sans-serif !important;
 }
 
 .infobox {
 	width:400px;
 	height:400px;
+	padding:0px;
+	margin:0px;
+	color:#464646;
 }
 
 .info_placename {
-	font-size:18px;
+	font-size:21px;
 	width:100%;
+	min-height:20px;
 }
 
 .info_placerating {
-	font-size:12px;
 	width:100%;
+	min-height:20px;
 }
 
 .starbox_trailer {
+	padding-top:2px;
 	padding-right:8px;
 }
 
@@ -39,9 +45,10 @@ body {
 .comparison_box {
 	position:absolute;
 	height:100%;
-	width:150px;
+	width:200px;
 	background-color:#5E5E5E;
 	color:#FF9900;
+	overflow:auto;
 }
 
 .search_box {
