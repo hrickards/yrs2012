@@ -15,6 +15,42 @@ def one_of_in(arr1, arr2)
   arr1.inject(false) { |result, element| result or arr2.include? element }
 end
 
+def word_includes_word(word, str)
+  str.include? word or str.include? (word << 's') or str.include? word[0..-2]
+end
+
+def words_include_word(words, str)
+  words.inject (false) { |result, obj| result or word_includes_word(obj, str) }
+end
+
+def in_photo_map(str)
+  maps = {
+    :Mcd => ['mcdonalds', 'maccy ds', 'mcd', 'donald', 'mc', 'donalds'],
+    :bbq => ['bbq', 'barbecue', 'grill'],
+    :cofe => ['coffee', 'cofe', 'starbucks', 'costa', 'nero', 'republic', 'tea'],
+    :fortune_cookie => ['chinese', 'chineese'],
+    :hotdog => ['hotdog', 'dog', 'sausage', 'saussage'],
+    :myicon => ['burger'],
+    :organic => ['organic', 'salad'],
+    :pile => ['chicken', 'meat', 'beef', 'lamb', 'pork'],
+    :pizza => ['pizza', 'pizzas', 'dominoes', 'dominoes'],
+    :sandvi4 => ['sanwich', 'sandwhich', 'bread', 'sandwhiches'],
+    :steak => ['steak', 'steaks'],
+    :sushi => ['japanese', 'sushi', 'fish'],
+    :texmex => ['texan', 'mexican', 'chili', 'fajita'],
+    :thai => ['thai']
+  }
+
+  results = maps.select { |icon, words| words_include_word words, str }.map { |i, w| i.to_s }.first
+end
+
+def magic_photos(details)
+  interesting_fields = [details["BusinessName"], details["BusinessType"]].concat (details["types"] or [])
+  stop_words = %w{and after caterers other}
+
+  interesting_fields.select { |f| not f.nil? }.map { |f| f.split(" ") }.flatten.map { |f| f.downcase.split(//).select { |s| s =~ /[a-zA-Z]/}.join }.select { |f| not (f.nil? or f.empty? or stop_words.include? f) }.map { |f| in_photo_map f }.select { |f| not f.nil? }.first or 'sandvi4'
+end
+
 def allergy_rating
   Random.rand(4)+1
 end
@@ -86,6 +122,10 @@ end
 
   details["reviews"] = (0..(Random.rand(10)+1)).map { |f| random_review } unless details["reviews"]
   details["allergies"] = allergy_ratings
+  details["logo"] = magic_photos details
+  if details["logo"] and details["logo"] != "sandvi4"
+    puts details["logo"]
+  end
 
   details =  magic_fix Hash[details.select { |key, value| not (key == "_id" or value.nil? or (value.is_a? String and value.empty?)) }]
   @collection.insert details
