@@ -53,12 +53,18 @@ class PlaceSearch
     query = {}
     if approx_includes LOCATION_WORDS, criteria.first
       p_i = criteria.index { |x| approx_includes STEMMED_STOP_STOP_WORDS, x }
-      location_criteria = criteria[1...p_i]
-      criteria = criteria[p_i..-1]
 
+      if p_i.nil?
+        location_criteria = criteria
+      else
+        location_criteria = criteria[1...p_i]
+        criteria = criteria[p_i..-1]
+        query.merge! parse_generic_criteria(criteria, STEMMED_STOP_STOP_WORDS)
+      end
       query.merge! create_location_criteria(location_criteria.join(' '))
+    else
+      query.merge! parse_generic_criteria(criteria, STEMMED_STOP_STOP_WORDS)
     end
-    query.merge! parse_generic_criteria(criteria, STEMMED_STOP_STOP_WORDS)
   end
 
   def self.parse_pre_criteria(criteria)
