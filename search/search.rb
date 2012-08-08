@@ -49,6 +49,28 @@ class PlaceSearch
     query
   end
 
+  def self.search_wrapper(string)
+    old_query = search string
+    query = {}
+
+    query[:icon] = old_query[:type] if old_query[:type]
+
+    old_query[:filters].each do |filter_name|
+      query.merge! (case filter_name
+    when 'cheap'.stem
+      {}
+    when 'nutfree'.stem
+      {'allergies.peanuts' => {'$lt' => 3}}
+    when 'healthy'.stem
+      {'rating_value' => {'$gt' => 3}}
+    end)
+    end if old_query[:filters]
+
+    query.merge! create_location_criteria(old_query[:location]) if old_query[:location]
+
+    query
+  end
+
   protected
   def self.parse_criteria(criteria)
     return {} if criteria.empty?
@@ -165,6 +187,6 @@ end
 
 class PlaceSearchApi < Sinatra::Base
   post '/search' do
-    redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(PlaceSearch.search(params[:query]).to_json)}"
+    redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(PlaceSearch.search_wrapper(params[:query]).to_json)}"
   end
 end
