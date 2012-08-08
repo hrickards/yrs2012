@@ -13,7 +13,7 @@ class Regexp
 end
 
 class PlaceSearch
-  RESTAURANT_TYPES = %w{italian mexican chinese}
+  RESTAURANT_TYPES = %w{mcdonalds bbq coffee donoughts cafe chinese hotdog burger organic chicken pizza sandwhich steak japanese mexican thai indian bar}
   RESTAURANT_WORDS = %w{restaurant place}
   LOCATION_WORDS = %w{near located}
   START_STOP_WORDS = %w{find search me a an one some few}
@@ -23,9 +23,9 @@ class PlaceSearch
   LEV_LENGTH_COEFFICIENT = 1/4
 
   SEARCH_MAPPINGS = {
-    %w{healthy} => {:rating_value => {"$gt" => 3}},
-    %w{cheap} => {:cheap => true},
-    %w{nut free} => {:nut_free => true}
+    %w{healthy} => {'rating_value' => {'$gt' => 3}},
+    %w{cheap} => {},
+    %w{nut free} => {'allergies.peanuts' => {'$lt' => 3}}
   }
 
   STEMMED_START_STOP_WORDS = START_STOP_WORDS.map { |word| word.stem }
@@ -40,7 +40,7 @@ class PlaceSearch
     words = pre_parse(string)
     pre_criteria, type, criteria = pivot_type words
 
-    query = { :type => type }
+    query = { :icon => type }
 
     query.merge! parse_pre_criteria(pre_criteria)
     query.merge! parse_criteria(criteria)
@@ -77,9 +77,10 @@ class PlaceSearch
 
     if response["status"] == "OK"
       details = response["results"].first["geometry"]["location"]
-      {
-        :lat => details["lat"],
-        :lng => details["lng"]
+      { 'machine_location' =>
+        {
+          '$near' => [details["lng"], details["lat"]]
+        }
       }
     else
       {}
