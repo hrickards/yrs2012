@@ -1,6 +1,7 @@
 <?php
 $comp_items="";
 $place_items="";
+$comp_diff = true;
 
 function get_stars($trailer,$count,$starurl,$emptyurl){
 	$output = "";
@@ -16,12 +17,36 @@ function get_stars($trailer,$count,$starurl,$emptyurl){
 	return $output;
 }
 
+function get_allergies($allarr,$starurl,$emptyurl){
+	$output = "";
+	$first = true;
+	foreach($allarr as &$allergy){
+		if(key($allarr)!=''){
+			$output .= '<div class = "allergy_item" ';
+			if($first){
+				$output .= 'style="margin-top:5px;"';
+			}
+			$output .= ' >'.get_stars(str_replace("_"," ",key($allarr)).':',$allergy,$starurl,$emptyurl).'</div>';
+		}
+		next($allarr);
+		$first = false;
+	}
+	return $output;
+}
 
 function add_field($compare,$namer,$html){
-	global $comp_items,$place_items;
+	global $comp_items,$place_items,$comp_diff;
 	$place_items .= '<div class="info_place'.$namer.'">'.$html.'</div><br/>';
 	if($compare){
-		$comp_items .= '<div class="comp_place'.$namer.'">'.$html.'</div>';
+		$comp_items .= '<div class="comp_place'.$namer.' ';
+		if($comp_diff){
+			$comp_items .= 'compdiff1';
+			$comp_diff = false;
+		}else{
+			$comp_items .= 'compdiff2';
+			$comp_diff = true;
+		}
+		$comp_items .= '">'.($html).'</div>';
 	}
 }
 

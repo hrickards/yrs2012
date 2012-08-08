@@ -37,7 +37,6 @@ body {
 	z-index:9999;
 }
 
-
 .intro_box {
 	position:absolute;
 }
@@ -45,10 +44,48 @@ body {
 .comparison_box {
 	position:absolute;
 	height:100%;
-	width:200px;
+	width:303px;
 	background-color:#5E5E5E;
-	color:#FF9900;
+	color:#FFC16B;
 	overflow:auto;
+}
+.comparison_box strong {
+	color:#FF9900;
+}
+.comp_placename strong {
+	color:#464646;
+}
+
+.comp_placename {
+	margin-bottom:6px;
+}
+
+.comp_placename hr {
+	color:#373737 !important;
+	background-color:#373737 !important;
+	display:none;
+}
+
+.comp_allergyinfo {
+	
+}
+
+
+.compdiff1 {
+	background-color:#787878;
+}
+
+.compdiff1 {
+	background-color:#787878;
+}
+
+.compbox {
+	margin:4px;
+	margin-top:8px;
+	padding:4px;
+	padding-top:8px;
+	padding-bottom:8px;
+	background-color:#787878;
 }
 
 .search_box {
@@ -61,3 +98,15 @@ body {
 	padding-top:5px;
 	padding-bottom:0px;
 }
+
+.allergy_item {
+	width:100%;
+	height:22px;
+	padding:2px;
+}
+
+
+
+
+
+
