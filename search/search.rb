@@ -40,6 +40,8 @@ class PlaceSearch
     words = pre_parse(string)
     pre_criteria, type, criteria = pivot_type words
 
+    type = fix_type type
+
     query = { :icon => type }
 
     query.merge! parse_pre_criteria(pre_criteria)
@@ -49,6 +51,10 @@ class PlaceSearch
   end
 
   protected
+  def self.fix_type(type)
+    RESTAURANT_TYPES[STEMMED_RESTAURANT_TYPES.index { |t| t == type }]
+  end
+
   def self.parse_criteria(criteria)
     query = {}
     if approx_includes LOCATION_WORDS, criteria.first
