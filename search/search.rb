@@ -16,12 +16,14 @@ class PlaceSearch
   LOCATION_WORDS = %w{near located}
   START_STOP_WORDS = %w{find search me a an one some few}
   STOP_STOP_WORDS = %w{that is also}
+  IGNORE_MODIFIERS = %w{very relatively quite really}
 
   LEV_LENGTH_COEFFICIENT = 1/4
 
   SEARCH_MAPPINGS = {
-    "healthy" => {:health_score => {"$gt" => 3}},
-    "cheap" => {:cheap => true}
+    %w{healthy} => {:rating_value => {"$gt" => 3}},
+    %w{cheap} => {:cheap => true},
+    %w{nut free} => {:nut_free => true}
   }
 
   STEMMED_START_STOP_WORDS = START_STOP_WORDS.map { |word| word.stem }
@@ -29,29 +31,40 @@ class PlaceSearch
   STEMMED_RESTAURANT_TYPES = RESTAURANT_TYPES.map { |word| word.stem }
   STEMMED_RESTAURANT_WORDS = RESTAURANT_WORDS.map { |word| word.stem }
   STEMMED_LOCATION_WORDS = LOCATION_WORDS.map { |word| word.stem }
-  STEMMED_SEARCH_MAPPINGS = Hash[SEARCH_MAPPINGS.map { |key, value| [key.stem, value] }]
+  STEMMED_SEARCH_MAPPINGS = Hash[SEARCH_MAPPINGS.map { |key, value| [key.map { |w| w.stem }, value] }]
 
   def self.search(string)
     words = pre_parse(string)
     pre_criteria, type, criteria = pivot_type words
+
+    query = { :type => type }
+
+    query.merge! parse_pre_criteria(pre_criteria)
+
     pre_criteria = parse_pre_criteria pre_criteria
-    criteria = parse_criteria criteria
-
-
-    [pre_criteria, type, criteria]
+    #criteria = parse_criteria criteria
+   
+    query
   end
 
   protected
   def self.parse_criteria(criteria)
-    pivot_index = criteria.length - criteria.map { |word| approx_includes STEMMED_STOP_STOP_WORDS, word }.reverse.index { |w| w }
-    criteria = criteria[pivot_index..-1].map { |w| w.split(//).last == ',' ? [w.split(//)[0..-2].join(''), ','] : w }.flatten
-    criteria.chunk { |x| x == 'and' or x == ',' }.map { |x| x.last }.select { |x| x != ['and'] and x != [','] }
+    parse_generic_criteria STEMMED_STOP_STOP_WORDS, criteria
   end
 
   def self.parse_pre_criteria(criteria)
-    pivot_index = criteria.length - criteria.map { |word| approx_includes STEMMED_START_STOP_WORDS, word }.reverse.index { |w| w }
+    parse_generic_criteria STEMMED_START_STOP_WORDS, criteria
+  end
+
+  def self.criterion_to_querion(criterion)
+    STEMMED_SEARCH_MAPPINGS.select { |key, value| approx_includes [key.join(' ')], criterion.join(' ') }.map { |key, value| value }.first
+  end
+
+  def self.parse_generic_criteria(list_of_stuff, criteria)
+    pivot_index = criteria.length - criteria.map { |word| approx_includes list_of_stuff, word }.reverse.index { |w| w }
     criteria = criteria[pivot_index..-1].map { |w| w.split(//).last == ',' ? [w.split(//)[0..-2].join(''), ','] : w }.flatten
-    criteria.chunk { |x| x == 'and' or x == ',' }.map { |x| x.last }.select { |x| x != ['and'] and x != [','] }
+    criteria = criteria.chunk { |x| x == 'and' or x == ',' }.map { |x| x.last }.select { |x| x != ['and'] and x != [','] }
+    merge_array_to_hash(criteria.map { |criterion| criterion_to_querion criterion })
   end
 
   def self.remove_non_spaceyalphanumeric(string)
@@ -104,53 +117,3 @@ class PlaceSearchApi < Sinatra::Base
     PlaceSearch.search(params[:query]).to_json
   end
 end
-
-
-  #def self.search(string)
-    #words = pre_parse(string)
-    #words = remove_stop_words words
-    #descriptions, type, criteria = pivot_type words
-
-    #query = {
-      #:type => type
-    #}
-
-    #query.merge! make_query_from_description descriptions
-    #query.merge! make_query_from_criteria criteria
-
-    #query
-  #end
-
-
-
-  #def self.make_query_from_description(description)
-    #merge_array_to_hash description.map { |desc| STEMMED_SEARCH_MAPPINGS[desc] }.select { |desc| not desc.nil? }
-  #end
-
-  #def self.make_query_from_location_criteria(location_criteria)
-    #{:location => location_criteria}
-  #end
-
-  #def self.make_query_from_criterion(criterion)
-    #criterion = criterion.split ' '
-    #if approx_includes STEMMED_LOCATION_WORDS, criterion.first
-      #location_criteria = criterion[1..-1]
-      
-      #make_query_from_location_criteria location_criteria
-    #else
-      #make_query_from_description criterion
-    #end
-  #end
-
-  #def self.make_query_from_criteria(criteria)
-    #merge_array_to_hash criteria.join(' ').split(' and').map { |criterion| make_query_from_criterion criterion }
-  #end
-#end
-
-#class PlaceSearchApi < Sinatra::Base
-  #get '/search.json' do
-    #content_type :json
-
-    #PlaceSearch.search(params[:query]).to_json
-  #end
-#end
