@@ -2,6 +2,7 @@ require 'fast_stemmer'
 require 'text'
 require 'sinatra/base'
 require 'json'
+require 'google_geocode'
 
 # See http://www.ruby-forum.com/topic/59614
 class Regexp
@@ -15,7 +16,7 @@ class PlaceSearch
   RESTAURANT_WORDS = %w{restaurant place}
   LOCATION_WORDS = %w{near located}
   START_STOP_WORDS = %w{find search me a an one some few}
-  STOP_STOP_WORDS = %w{that is also}
+  STOP_STOP_WORDS = %w{that is also that's}
   IGNORE_MODIFIERS = %w{very relatively quite really}
 
   LEV_LENGTH_COEFFICIENT = 1/4
@@ -31,6 +32,7 @@ class PlaceSearch
   STEMMED_RESTAURANT_TYPES = RESTAURANT_TYPES.map { |word| word.stem }
   STEMMED_RESTAURANT_WORDS = RESTAURANT_WORDS.map { |word| word.stem }
   STEMMED_LOCATION_WORDS = LOCATION_WORDS.map { |word| word.stem }
+  STEMMED_IGNORE_MODIFIERS = IGNORE_MODIFIERS.map { |word| word.stem }
   STEMMED_SEARCH_MAPPINGS = Hash[SEARCH_MAPPINGS.map { |key, value| [key.map { |w| w.stem }, value] }]
 
   def self.search(string)
@@ -40,29 +42,49 @@ class PlaceSearch
     query = { :type => type }
 
     query.merge! parse_pre_criteria(pre_criteria)
-
-    pre_criteria = parse_pre_criteria pre_criteria
-    #criteria = parse_criteria criteria
+    query.merge! parse_criteria(criteria)
    
     query
   end
 
   protected
   def self.parse_criteria(criteria)
-    parse_generic_criteria STEMMED_STOP_STOP_WORDS, criteria
+    query = {}
+    if approx_includes LOCATION_WORDS, criteria.first
+      p_i = criteria.index { |x| approx_includes STEMMED_STOP_STOP_WORDS, x }
+      location_criteria = criteria[1...p_i]
+      criteria = criteria[p_i..-1]
+      # TODO Parse location criteria
+    end
+    query.merge! parse_generic_criteria(criteria, STEMMED_STOP_STOP_WORDS)
   end
 
   def self.parse_pre_criteria(criteria)
-    parse_generic_criteria STEMMED_START_STOP_WORDS, criteria
+
+    parse_generic_criteria criteria, STEMMED_START_STOP_WORDS
+  end
+
+  def self.create_location_criteria(location_criteria)
+    location_criteria << ' Brighton'
+
+    gg = GoogleGeocode.new 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
+    location = gg.locate location_criteria 
+    raise location.coordinates
   end
 
   def self.criterion_to_querion(criterion)
-    STEMMED_SEARCH_MAPPINGS.select { |key, value| approx_includes [key.join(' ')], criterion.join(' ') }.map { |key, value| value }.first
+    if approx_includes STEMMED_LOCATION_WORDS, criterion.first
+      create_location_criteria criterion[0..-1]
+    else
+      criterion = criterion.select { |c| not approx_includes STEMMED_IGNORE_MODIFIERS, c }
+      STEMMED_SEARCH_MAPPINGS.select { |key, value| approx_includes [key.join(' ')], criterion.join(' ') }.map { |key, value| value }.first
+    end
   end
 
-  def self.parse_generic_criteria(list_of_stuff, criteria)
-    pivot_index = criteria.length - criteria.map { |word| approx_includes list_of_stuff, word }.reverse.index { |w| w }
-    criteria = criteria[pivot_index..-1].map { |w| w.split(//).last == ',' ? [w.split(//)[0..-2].join(''), ','] : w }.flatten
+  def self.parse_generic_criteria(criteria, list_of_things)
+    pivot_index = criteria.length - criteria.map { |word| approx_includes list_of_things, word }.reverse.index { |w| w }
+    criteria = criteria[pivot_index..-1]
+    criteria = criteria.map { |w| w.split(//).last == ',' ? [w.split(//)[0..-2].join(''), ','] : w }.flatten
     criteria = criteria.chunk { |x| x == 'and' or x == ',' }.map { |x| x.last }.select { |x| x != ['and'] and x != [','] }
     merge_array_to_hash(criteria.map { |criterion| criterion_to_querion criterion })
   end
@@ -84,6 +106,7 @@ class PlaceSearch
   end
 
   def self.approx_includes(array, string1)
+    string1 = string1.split(//)[0..-2].join('') if string1.split(//).last == "'"
     array.map { |string2| Text::Levenshtein.distance string1, string2 }.min <= (string1.length * LEV_LENGTH_COEFFICIENT)
   end
   
