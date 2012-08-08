@@ -50,25 +50,29 @@ class PlaceSearch
   end
 
   def self.search_wrapper(string)
-    old_query = search string
-    query = {}
+    begin
+      old_query = search string
+      query = {}
 
-    query[:icon] = old_query[:type] if old_query[:type]
+      query[:icon] = old_query[:type] if old_query[:type]
 
-    old_query[:filters].each do |filter_name|
-      query.merge! (case filter_name
-    when 'cheap'.stem
+      old_query[:filters].each do |filter_name|
+        query.merge! (case filter_name
+      when 'cheap'.stem
+        {}
+      when 'nutfree'.stem
+        {'allergies.peanuts' => {'$lt' => 3}}
+      when 'healthy'.stem
+        {'rating_value' => {'$gt' => 3}}
+      end)
+      end if old_query[:filters]
+
+      query.merge! create_location_criteria(old_query[:location]) if old_query[:location]
+
+      query
+    rescue Exception
       {}
-    when 'nutfree'.stem
-      {'allergies.peanuts' => {'$lt' => 3}}
-    when 'healthy'.stem
-      {'rating_value' => {'$gt' => 3}}
-    end)
-    end if old_query[:filters]
-
-    query.merge! create_location_criteria(old_query[:location]) if old_query[:location]
-
-    query
+    end
   end
 
   protected

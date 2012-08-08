@@ -22,3 +22,4 @@ open('test_data').read.split("\n")[1..-1].map { |l| l.split('|')[1..-1].map { |v
 end
 
 puts PlaceSearch.search_wrapper 'Healthy Italian near Brighton Station'
+puts PlaceSearch.search_wrapper ''
