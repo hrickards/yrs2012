@@ -2,7 +2,8 @@ require 'fast_stemmer'
 require 'text'
 require 'sinatra/base'
 require 'json'
-require 'google_geocode'
+require 'uri'
+require 'open-uri'
 
 # See http://www.ruby-forum.com/topic/59614
 class Regexp
@@ -54,22 +55,35 @@ class PlaceSearch
       p_i = criteria.index { |x| approx_includes STEMMED_STOP_STOP_WORDS, x }
       location_criteria = criteria[1...p_i]
       criteria = criteria[p_i..-1]
-      # TODO Parse location criteria
+
+      query.merge! create_location_criteria(location_criteria.join(' '))
     end
     query.merge! parse_generic_criteria(criteria, STEMMED_STOP_STOP_WORDS)
   end
 
   def self.parse_pre_criteria(criteria)
-
     parse_generic_criteria criteria, STEMMED_START_STOP_WORDS
   end
 
   def self.create_location_criteria(location_criteria)
-    location_criteria << ' Brighton'
+    location_criteria << ', Brighton'
 
-    gg = GoogleGeocode.new 'AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM'
-    location = gg.locate location_criteria 
-    raise location.coordinates
+    base = "http://maps.googleapis.com/maps/api/geocode/json"
+    sensor = false
+    address = URI.encode location_criteria
+
+    url = "#{base}?sensor=#{sensor}&address=#{address}"
+    response = JSON.parse open(url).read
+
+    if response["status"] == "OK"
+      details = response["results"].first["geometry"]["location"]
+      {
+        :lat => details["lat"],
+        :lng => details["lng"]
+      }
+    else
+      {}
+    end
   end
 
   def self.criterion_to_querion(criterion)
