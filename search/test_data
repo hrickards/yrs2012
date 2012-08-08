@@ -1,4 +1,5 @@
 | query                                 | type         | filters | location         |
+| cheap fish and chips                  | fishandchips | cheap   |                  |
 | pizza take-away                       | italian      |         |                  |
 | pizza takeaway                        | italian      |         |                  |
 | italian restaurant                    | italian      |         |                  |

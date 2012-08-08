@@ -17,7 +17,8 @@ class PlaceSearch
     'pizza' => 'italian',
     'italian' => 'italian',
     'pasta' => 'italian',
-    'cafe' => 'italian'
+    'cafe' => 'italian',
+    'fish and chips' => 'fishandchips'
   }
 
   RESTAURANT_WORDS = [["restaurant"], ["place"], ["takeout"], ["take", "out"], ["take", "away"], ["takeaway"]]
@@ -139,22 +140,24 @@ class PlaceSearch
   def self.array_approx_includes(array1, array2)
     array1.map { |a| array2.inject (true) { |result, b| result and approx_includes(a, b) } }.inject (false) { |r, o| r or o }
   end
-  
+
   def self.merge_array_to_hash(array)
     array.inject ({}) { |result, value| result.merge value }
   end
 
   def self.pivot_type(words)
-    pivot_index = words.map { |word| approx_includes(STEMMED_RESTAURANT_TYPES.map { |k, v| k }, word) }.index { |w| w }
+    start_pivot, end_pivot = STEMMED_RESTAURANT_TYPES.map { |k, v| k }.map { |w| words.each_with_index.map { |word, i| approx_includes(STEMMED_RESTAURANT_TYPES.map { |k, v| k}, words[i..i+w.split(' ').length-1].join(' ')) ? [i, i+w.split(' ').length-1] : -1 } }.select { |x| not x.select { |y| y != -1 }.empty? }.first.select { |x| x != -1 }.first
+    #pivot_index = words.map { |word| chunk_approx_includes(STEMMED_RESTAURANT_TYPES.map { |k, v| k }, word) }.index { |w| w }
 
-    descriptions = words[0...pivot_index]
-    type = STEMMED_RESTAURANT_TYPES[words[pivot_index]]
-    criteria = remove_restaurant_words words[pivot_index+1..-1]
+    descriptions = words[0...start_pivot]
+    type = STEMMED_RESTAURANT_TYPES[words[start_pivot..end_pivot].join ' ']
+    criteria = remove_restaurant_words words[end_pivot+1..-1]
 
     [descriptions, type, criteria]
   end
   
   def self.remove_restaurant_words(words)
+    return [] if words.empty?
     last_restaurant_word_index = (0...words.length).map { |n| array_approx_includes(STEMMED_RESTAURANT_WORDS, words[0..n]) ? n : -1 }.max
     words[last_restaurant_word_index+1..-1]
   end
