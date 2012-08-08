@@ -10,27 +10,35 @@ include 'functions.php';
 $m = new Mongo('mongodb://178.79.184.102:27017');
 $db = $m->selectDB('fud');
 $col = $db->selectCollection('places');
-$cursorlimit = 40;
+$cursorlimit = 8;
 $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 
 for($i=1;$i<$cursorlimit+1;$i+=1){
+	$comp_diff = true;
 	$cur = $cursor->getNext();
 	$place_items .= '[\'<div class="infobox" >';
 	
 	$comp_items .= '<div class="compbox" >';
 	
-	add_field(true,'name', addslashes($cur['business_name']).'<hr/>');
+	add_field(true,'name', '<strong>'.addslashes($cur['name']).'</strong><hr/>');
 	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
-	add_field(true,'type','<strong>Type:</strong> '.$cur['business_type']);
-	add_field(false,'address','<strong>Address:</strong><br/>'.addslashes($cur['address_line1']).'<br/>'.addslashes($cur['address_line2']).'<br/>'.addslashes($cur['address_line3']).'<br/>'.addslashes($cur['address_line4']));
+	add_field(true,'googleplacesrating', '<strong>Google Places Rating: </strong>'.$cur['rating']);
+	add_field(true,'type','<strong>Type: </strong> '.$cur['business_type']);
+	add_field(false,'website','<strong>Website: </strong> '.$cur['website']);
+	add_field(false,'number', '<strong>Phone Number: </strong>'.$cur['formatted_phone_number']);
+	add_field(false,'intnumber', '<strong>Int. Phone Number: </strong>'.$cur['international_phone_number']);
+	add_field(true,'allergyinfo', '<strong>Allergy Information: </strong><br/>(no problem -> problematic)<br/>'.get_allergies($cur['allergies'],'img/allergy_enabled.png','img/allergy_disabled.png'));
+	add_field(false,'address','<strong>Address: </strong><br/>'.addslashes($cur['address_line1']).'<br/>'.addslashes($cur['address_line2']).'<br/>'.addslashes($cur['address_line3']).'<br/>'.addslashes($cur['address_line4']));
 	
-	$comp_items .= '</div><br/>';
+	$comp_items .= '</div>';
 	
 	$place_items .= '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
 	if($i<$cursorlimit){
 		$place_items .= ','."\n";
 	}
 }
+
+$comp_items .= '<div id = "compbox_spacer" style = "height:40px;width:100%;"></div>';
 
 
 ?>
@@ -103,8 +111,3 @@ for($i=1;$i<$cursorlimit+1;$i+=1){
   </script>
 	
 <body>
-<?php
-
-include 'footer.php';
-
-?>
