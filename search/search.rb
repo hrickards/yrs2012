@@ -8,14 +8,16 @@ class Regexp
   end
 end
 
-STOP_WORDS = %w{hey hi please thanks thank you can find search me an one a some for}
+STOP_WORDS = %w{hey hi please thanks thank you can find search me an one a some for by}
 STEMMED_STOP_WORDS = STOP_WORDS.map { |word| word.stem }
-RESTAURANT_TYPES = %w{italian}
+RESTAURANT_TYPES = %w{italian mexican chinese}
 STEMMED_RESTAURANT_TYPES = RESTAURANT_TYPES.map { |word| word.stem }
 RESTAURANT_WORDS = %w{restaurant place}
 STEMMED_RESTAURANT_WORDS = RESTAURANT_WORDS.map { |word| word.stem }
-LOCATION_WORDS = %w{near}
+LOCATION_WORDS = %w{near located}
 STEMMED_LOCATION_WORDS = LOCATION_WORDS.map { |word| word.stem }
+
+LEV_LENGTH_COEFFICIENT = 1
 
 SEARCH_MAPPINGS = {
   "healthy" => {:health_score => {"$gt" => 3}},
@@ -41,8 +43,12 @@ def remove_stop_words(words)
   words.select { |word| not STEMMED_STOP_WORDS.include? word }
 end
 
+def approx_includes(array, string1)
+  array.map { |string2| Text::Levenshtein.distance string1, string2 }.min <= (string1.length * LEV_LENGTH_COEFFICIENT)
+end
+
 def remove_restaurant_words(words)
-  if (STEMMED_RESTAURANT_WORDS + RESTAURANT_WORDS).map { |rest_word| Text::Levenshtein.distance words.first, rest_word }.min <= 3
+  if approx_includes (STEMMED_RESTAURANT_WORDS + RESTAURANT_WORDS), words.first
     words[1..-1]
   else
     words
@@ -50,7 +56,7 @@ def remove_restaurant_words(words)
 end
 
 def pivot_type(words)
-  word_bools = words.map { |word| STEMMED_RESTAURANT_TYPES.include? word }
+  word_bools = words.map { |word| approx_includes STEMMED_RESTAURANT_TYPES, word }
   pivot_index = word_bools.index { |w| w }
 
   descriptions = words[0...pivot_index]
@@ -74,7 +80,7 @@ end
 
 def make_query_from_criterion(criterion)
   criterion = criterion.split ' '
-  if STEMMED_LOCATION_WORDS.include? criterion.first
+  if approx_includes STEMMED_LOCATION_WORDS, criterion.first
     location_criteria = criterion[1..-1]
     
     make_query_from_location_criteria location_criteria
