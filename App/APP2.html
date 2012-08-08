@@ -24,33 +24,36 @@ body{background-color:#282828}
 }
 #Select {
 	position: absolute;
-	height: 10%;
+	height: 8%;
 	width: 70%;
 	left: 15%;
-	top: 48%;
+	top: 44%;
 	right: 15%;
+	background-color: #999999;
 }
 #SelectTOP {
 	position: absolute;
-	height: 10%;
-	width: 50%;
+	height: 7%;
+	width: 49%;
 	left: auto;
-	top: 37%;
+	top: 35%;
 	right: 15%;
+	background-color: #E3E3E3;
 }
 #Select3 {
 	position: absolute;
 	width: 70%;
 	left: 15%;
-	top: 59%;
+	top: 53%;
 	right: 15%;
-	height: 10%;
+	height: 8%;
+	background-color: #999999;
 }
 #Select2 {
 	position: absolute;
-	height: 10%;
+	height: 8%;
 	width: 33%;
-	top: 70%;
+	top: 72%;
 	left: 15%;
 }
 #Bar {
@@ -63,28 +66,38 @@ body{background-color:#282828}
 }
 #GPS {
 	position: absolute;
-	height: 10%;
+	height: 8%;
 	width: 19%;
-	top: 37%;
+	top: 35%;
 	left: 15%;
 }
 #EatIN {
 	position: absolute;
-	height: 10%;
+	height: 8%;
 	width: 33%;
-	top: 70%;
+	top: 72%;
 	right: 15%;
+}
+#Label {
+	position: absolute;
+	height: 8%;
+	width: 70%;
+	left: 15%;
+	top: 62%;
+	right: 15%;
+	background-color: #999999;
 }
 </style>
 </head>
 
 <body>
-<img src="../../../Unnamed Site 2/fancy2.png" id="Fancy"/>
+<img src="../../../Unnamed Site 2/fancy2.png" id="Fancy">
 <select name="Select2" id="Select">
 </select>
-<img src="../../../Unnamed Site 2/title.png" id="Title" />
+
 <select name="Select" id="Select3">
 </select>
+<img src="../../../Unnamed Site 2/title.png" id="Title"/>
 <input name="Select2" type="button" id="Select2" value="Take away" />
 <img src="../../../Unnamed Site 2/bar.png" id="Bar"/>
 <form id="form3" name="form3" method="post" action="">
@@ -108,6 +121,11 @@ body{background-color:#282828}
 </form>
 <form id="form6" name="form6" method="post" action="">
   <input type="submit" name="EatIN" id="EatIN" value="Eat in" />
+</form>
+<form id="form7" name="form7" method="post" action="">
+  <label for="Label"></label>
+  <select name="Label" id="Label">
+  </select>
 </form>
 </body>
 </html>
