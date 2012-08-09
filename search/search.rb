@@ -128,7 +128,7 @@ class PlaceSearch
       old_query = search string
       query = {}
 
-      query[:icon] = old_query[:type] if old_query[:type]
+      query[:logo] = old_query[:type] if old_query[:type]
 
       old_query[:filters].each do |filter_name|
         query.merge! (case filter_name
