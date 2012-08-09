@@ -1,6 +1,7 @@
 require 'mongo'
 require 'twilio-ruby'
 require 'sinatra/base'
+require 'net/http'
 
 require_relative '../search/search'
 
@@ -41,13 +42,39 @@ EOF
   </Say>
   <Record
     transcribe="true"
-    transcribeCallback="/handle_voice"
-    method="GET"
+    transcribeCallback="/handle_transcription"
     maxLength="30"
     finishOnKey="*"
+    method="GET"
+    action="/handle_voice"
     />
   <Say>Sorry, I didn't quite catch that</Say>
 </Response>
 EOF
+  end
+
+  get 'handle_voice' do
+    content_type :xml
+
+    <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>
+    Thank you. You will shortly get a text with results.
+  </Say>
+</Response>
+EOF
+  end
+
+  post 'handle_transcription' do
+    from = params['From']
+    to = params['To']
+    body = params['TranscriptionText']
+    account_sid = 'AP2aeed3568cd85567ef10ce168355b0fc'
+
+    url = "http://www.twilio.com/2010-04-01/Accounts/#{account_sid}/SMS/Messages"
+
+    http = Net::HTTP.new
+    http.post url, "from=#{from}&to=#{to}&body=#{body}"
   end
 end
