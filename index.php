@@ -3,7 +3,49 @@
 <title>F&#252;d</title> 
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.js"></script> 
+<script type="text/javascript" src="js/jquery.cookie.js"></script> 
+<link href="js/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="js/jquery.mCustomScrollbar.js"></script>
 
+<script>
+
+function updateResizeDiv(){
+	var mapwidther = $(window).width()-$('#comparebox').width();
+	var mapheighter = ($(window).height()-$('#searchbox').height())-5;
+	$('#introbox').css('width',mapwidther);
+	$('#introbox').css('left',$('#comparebox').width());
+	$('#introbox').css('height',mapheighter);
+	$('#map').css('width',mapwidther);
+	$('#map').css('left',$('#comparebox').width());
+	$('#map').css('height',mapheighter);
+	$('#introbox_inner').css('left',((mapwidther/2)-($('#introbox_inner').width()/2)));
+	$('#introbox_inner').css('top',((mapheighter/2)-($('#introbox_inner').height()/2)));
+	$('#comparebox').css('height',$(window).height()-$('#searchbox').height()-25);
+}
+
+function checkintro(){
+	var introcookie = $.cookie("fud_introscreen");
+	if(introcookie != 'true'){
+		$('#introbox').fadeIn();
+		//$.cookie("fud_introscreen", "true", { path: "/", expires: 7 });
+	}else{
+		$('#search_div').fadeIn();
+	}
+}
+
+function init_jsfud(){
+	checkintro();
+	updateResizeDiv();
+	$("#comparebox").mCustomScrollbar();
+	$('#introbox_inner').delay(800).fadeIn();
+}
+
+$(window).resize(updateResizeDiv);
+
+</script>
 <?php
 include 'functions.php';
 $srchjson=$_GET['s'];
@@ -54,32 +96,37 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
 	}
 }
 
-$comp_items .= '<div id = "compbox_spacer" style = "height:40px;width:100%;"></div>';
+$comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></div>';
 
 
 ?>
 
 </head>
 
-<body>
+<body onload="init_jsfud();" >
 
 
-<div class="intro_box box">
-		Intro Box
+<div id = "introbox" style="visibility:none;">
+	<div id = "introbox_inner" style="position:relative;visibility:none;" class="intro_box">
+		<div style="width:100%; text-align:center;">
+		<img src="img/fud_logo_large.png" /><br/>
+			tell FÜD what you want:<br/>
+		</div>
 	</div>
+</div>
 	
-	<div id = "comparebox" class="comparison_box box">
+	<div id = "comparebox" class="comparison_box">
 		<?php
 			echo $comp_items;
 		?>
 	</div>
 	
-	<div class="search_box box">
+	<div id="searchbox" class="search_box box">
 		<img src="img/fud_logo.png" />
-		<div id="search_div" ><form method="post" action="http://178.79.184.102:6969/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
+		<div id="search_div" style="visibility:none;" ><form method="post" action="http://178.79.184.102:6969/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
 	</div>
   
-<div id="map" style="width:100%;height:100%;" ></div>
+<div id="map" style="position:absolute;left:330px;width:400px;height:100%;z-index:10;" ></div>
 
   <script type="text/javascript">
     var locations = [
