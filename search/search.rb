@@ -269,4 +269,8 @@ class PlaceSearchApi < Sinatra::Base
   post '/search' do
     redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(PlaceSearch.search_wrapper(params[:query]).to_json)}"
   end
+  
+  get '/search' do
+    PlaceSearch.search_wrapper(params[:query]).to_json
+  end
 end
