@@ -134,10 +134,12 @@ class PlaceSearch
         query.merge! (case filter_name
       when 'cheap'.stem
         {}
-      when 'nutfree'.stem
+      when 'nutfree'
         {'allergies.peanuts' => {'$lt' => 3}}
       when 'healthy'.stem
         {'rating_value' => {'$gt' => 3}}
+      else
+        {}
       end)
       end if old_query[:filters]
 
