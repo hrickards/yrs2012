@@ -1,6 +1,3 @@
-require 'fast_stemmer'
-require 'text'
-require 'json'
 require 'uri'
 require 'open-uri'
 

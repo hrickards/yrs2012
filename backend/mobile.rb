@@ -1,7 +1,4 @@
-require 'mongo'
-require 'twilio-ruby'
 require 'net/https'
-
 require_relative 'search'
 
 class MobileSearch

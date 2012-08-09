@@ -1,4 +1,7 @@
-require 'sinatra/base'
+require 'rubygems'
+require 'bundler'
+Bundler.require :default
+
 require_relative 'search'
 require_relative 'mobile'
 
