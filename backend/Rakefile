@@ -144,8 +144,9 @@ task :download_health_ratings do
 end
 
 task :insert_health_ratings do
-  @connection = Mongo::Connection.new
-  @db = @connection['fud']
+  uri  = URI.parse(ENV['MONGOLAB_URI'])
+  @connection = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+  @db = @connection.db(uri.path.gsub(/^\//, ''))
   @collection = @db['places']
   @collection.remove
 
@@ -197,8 +198,9 @@ task :insert_health_ratings do
 end
 
 task :index do
-  @connection = Mongo::Connection.new
-  @db = @connection['fud']
+  uri  = URI.parse(ENV['MONGOLAB_URI'])
+  @connection = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+  @db = @connection.db(uri.path.gsub(/^\//, ''))
   @collection = @db['places']
 
   fields_for_index = %w{business_name business_type address_line1 post_code rating_value rating_key formatted_address formatted_phone_number name rating website logo allergies.peanuts allergies.wheat allergies.tree_nuts}

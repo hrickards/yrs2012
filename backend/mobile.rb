@@ -7,8 +7,9 @@ class MobileSearch
     humanised_query = "#{query[:logo]} ".gsub('_', ' ') if query[:logo]
     header = "FUD found you these #{humanised_query}restaurants:\n"
 
-    @connection = Mongo::Connection.new
-    @db = @connection['fud']
+    uri  = URI.parse(ENV['MONGOLAB_URI'])
+    @connection = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+    @db = @connection.db(uri.path.gsub(/^\//, ''))
     @collection = @db['places']
     results = @collection.find(query).limit(5)
 
@@ -63,8 +64,9 @@ EOF
     humanised_query = "#{query[:logo]} ".gsub('_', ' ') if query[:logo]
     header = "FUD found you these #{humanised_query}restaurants:\n"
 
-    @connection = Mongo::Connection.new
-    @db = @connection['fud']
+    uri  = URI.parse(ENV['MONGOLAB_URI'])
+    @connection = Mongo::Connection.from_uri(ENV['MONGOLAB_URI'])
+    @db = @connection.db(uri.path.gsub(/^\//, ''))
     @collection = @db['places']
     results = @collection.find(query).limit(5)
 
