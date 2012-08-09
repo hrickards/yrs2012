@@ -1,7 +1,7 @@
 require 'mongo'
 require 'twilio-ruby'
 require 'sinatra/base'
-require 'net/http'
+require 'net/https'
 
 require_relative '../search/search'
 
@@ -10,8 +10,7 @@ class FUDMobile < Sinatra::Base
     content_type :xml
 
     query = PlaceSearch.search_wrapper params[:Body]
-    puts query.inspect
-    humanised_query = "#{query[:logo]} " if query[:logo]
+    humanised_query = "#{query[:logo]} ".gsub('_', ' ') if query[:logo]
     header = "FUD found you these #{humanised_query}restaurants:\n"
 
     @connection = Mongo::Connection.new
@@ -41,8 +40,6 @@ EOF
     Press the start key when finished.
   </Say>
   <Record
-    transcribe="true"
-    transcribeCallback="/handle_transcription"
     maxLength="30"
     finishOnKey="*"
     method="GET"
@@ -53,7 +50,9 @@ EOF
 EOF
   end
 
-  get 'handle_voice' do
+  get '/handle_voice' do
+    fork { send_voice_result params["RecordingUrl"], params["To"], params["From"] }
+
     content_type :xml
 
     <<EOF
@@ -65,16 +64,24 @@ EOF
 </Response>
 EOF
   end
+end
 
-  post 'handle_transcription' do
-    from = params['From']
-    to = params['To']
-    body = params['TranscriptionText']
-    account_sid = 'AP2aeed3568cd85567ef10ce168355b0fc'
+def send_voice_result(url, from, to)
+  query = JSON.parse(`/home/harry/code/yrs2012/twilio/parse_audio "#{url}"`)['hypotheses'].first['utterance']
+  puts query.inspect
+  query = PlaceSearch.search_wrapper query
+  humanised_query = "#{query[:logo]} ".gsub('_', ' ') if query[:logo]
+  header = "FUD found you these #{humanised_query}restaurants:\n"
 
-    url = "http://www.twilio.com/2010-04-01/Accounts/#{account_sid}/SMS/Messages"
+  @connection = Mongo::Connection.new
+  @db = @connection['fud']
+  @collection = @db['places']
+  results = @collection.find(query).limit(5)
 
-    http = Net::HTTP.new
-    http.post url, "from=#{from}&to=#{to}&body=#{body}"
-  end
+  results = results.map { |p| "#{p["business_name"]}, near #{p["address_line1"]}" }
+
+
+  @client = Twilio::REST::Client.new 'AC098c9055bcafb93b7f7d9696676cf05d', '2c49b08f33d8ba0d3781abead2a3459a'
+  @client.account.sms.messages.create :from => from, :to => to, :body => (header + results[0..1].join("\n"))
+  @client.account.sms.messages.create :from => from, :to => to, :body => (results[2..-1].join "\n")
 end
