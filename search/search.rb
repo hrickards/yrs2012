@@ -136,7 +136,7 @@ class PlaceSearch
         {}
       when 'nutfree'
         {'allergies.peanuts' => {'$lt' => 3}}
-      when 'healthy'.stem
+      when 'hygienic'.stem
         {'rating_value' => {'$gt' => 3}}
       else
         {}
