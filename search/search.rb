@@ -89,8 +89,8 @@ class PlaceSearch
     'chips' => 'fish_and_chips',
     'chip' => 'fish_and_chips',
 
-    'indian' => 'fish_and_chips',
-    'curry' => 'fish_and_chips'
+    'indian' => 'indian',
+    'curry' => 'indian'
   }
 
   RESTAURANT_WORDS = [["restaurant"], ["place"], ["takeout"], ["take", "out"], ["take", "away"], ["takeaway"], ["shop"]]
@@ -118,7 +118,7 @@ class PlaceSearch
     query.merge! parse_pre_criteria(pre_criteria)
     old_filters = query[:filters]
     query.merge! parse_criteria(criteria)
-    query[:filters] += old_filters
+    query[:filters] += old_filters if query[:filters]
     
     query
   end
