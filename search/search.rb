@@ -18,14 +18,86 @@ class PlaceSearch
     'italian' => 'italian',
     'pasta' => 'italian',
     'cafe' => 'italian',
-    'fish and chips' => 'fishandchips'
+    'fish and chips' => 'fish_and_chips',
+
+    'mcdonalds' => 'mcdonalds',
+    'maccy ds' => 'mcdonalds',
+    'mcd' => 'mcdonalds',
+    'donald' => 'mcdonalds',
+    'mc donalds' => 'mcdonalds',
+
+    'bbq' => 'bbq',
+    'barbecue' => 'bbq',
+    'grill' => 'bbq',
+
+    'coffee' => 'coffee',
+    'cofe' => 'coffee',
+    'starbucks' => 'coffee',
+    'costa' => 'coffee',
+    'nero' => 'coffee',
+    'republic' => 'coffee',
+    'tea' => 'coffee',
+
+    'doughnut' => 'donoughts',
+    'donut' => 'donoughts',
+
+    'cafe' => 'cafe',
+    'kitchen' => 'cafe',
+    'cottage' => 'cafe',
+
+    'chinese' => 'chinese',
+    'chineese' => 'chinese',
+    'bengal' => 'chinese',
+    'china' => 'chinese',
+    'mandarin' => 'chinese',
+    'hong kong' => 'chinese',
+    'shanghai' => 'chinese',
+    'oriental' => 'chinese',
+    'tandoori' => 'chinese',
+
+    'hotdog' => 'hotdog',
+    'hotdogs' => 'hotdog',
+    'sausage' => 'hotdog',
+    'sausages' => 'hotdog',
+    'american' => 'hotdog',
+
+    'burger' => 'burger',
+    'burgers' => 'burger',
+    
+    'organic' => 'organic',
+    'salad' => 'organic',
+    'salads' => 'organic',
+
+    'chicken' => 'chicken',
+    'chickens' => 'chicken',
+    'meat' => 'chicken',
+    'beef' => 'chicken',
+    'lamb' => 'chicken',
+    'pork' => 'chicken',
+    'nandos' => 'chicken',
+    'nando' => 'chicken',
+    'kfc' => 'chicken',
+
+    'pizza' => 'pizza',
+    'pizzas' => 'pizza',
+
+    'steak' => 'steak',
+    'steaks' => 'steak',
+
+    'cod' => 'fish_and_chips',
+    'fish' => 'fish_and_chips',
+    'chips' => 'fish_and_chips',
+    'chip' => 'fish_and_chips',
+
+    'indian' => 'fish_and_chips',
+    'curry' => 'fish_and_chips'
   }
 
-  RESTAURANT_WORDS = [["restaurant"], ["place"], ["takeout"], ["take", "out"], ["take", "away"], ["takeaway"]]
-  LOCATION_WORDS = %w{near located}
+  RESTAURANT_WORDS = [["restaurant"], ["place"], ["takeout"], ["take", "out"], ["take", "away"], ["takeaway"], ["shop"]]
+  LOCATION_WORDS = %w{near located by}
   START_STOP_WORDS = %w{find search me a an one some few}
   STOP_STOP_WORDS = %w{that is also that's}
-  IGNORE_MODIFIERS = %w{very relatively quite really}
+  IGNORE_MODIFIERS = %w{very relatively quite really some pretty}
 
   LEV_LENGTH_COEFFICIENT = 1/4
 
