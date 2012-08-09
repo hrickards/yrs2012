@@ -1,4 +1,7 @@
+<html>
 <head>
+
+<meta charset="utf-8" />
 
 <title>F&#252;d</title> 
 <link rel="stylesheet" type="text/css" href="style.css" />
@@ -180,4 +183,5 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
     }
   </script>
 	
-<body>
+</body>
+</html>
