@@ -59,8 +59,8 @@ if(!isset($_GET['s'])){
 	$srchjson = json_decode(stripslashes($srchjson));
 }
 
-$m = new Mongo('mongodb://heroku_app6583922:9o7p80dd1kabf1sc22huu9ot0m@ds037077-a.mongolab.com:37077');
-$db = $m->selectDB('heroku_app6583922');
+$m = new Mongo('mongodb://heroku_app6583922:9o7p80dd1kabf1sc22huu9ot0m@ds037077-a.mongolab.com:37077/heroku_app6583922');
+//$db = $m->selectDB('heroku_app6583922');
 $col = $db->selectCollection('places');
 $cursorlimit = 40;
 
