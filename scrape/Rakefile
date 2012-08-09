@@ -204,7 +204,7 @@ task :index do
   fields_for_index = %w{business_name business_type address_line1 post_code rating_value rating_key formatted_address formatted_phone_number name rating website logo allergies.peanuts allergies.wheat allergies.tree_nuts}
 
   fields_for_index.each do |f|
-    @collection.ensure_index [[f]]
+    @collection.ensure_index [[f, Mongo::ASCENDING]]
   end
 
   @collection.ensure_index [["machine_location", Mongo::GEO2D]]
