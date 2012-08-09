@@ -37,7 +37,7 @@ def string_suggests_type(str)
     :mcdonalds => %w{mcdonalds maccy ds mcd donald mc donalds},
     :bbq => %w{bbq barbecue grill},
     :coffee => %w{coffee cofe starbucks costa nero republic tea},
-    :donoughts => %w{donoughts},
+    :donoughts => %w{doughnut donut},
     :cafe => %w{cafe kitchen cottage},
     :chinese => %w{chinese chineese bengal china mandarin hong kong shanghai noodle rice wok oriental orient tandoori po sing wing hing shaan shema sitar nishat nayeb maharani levante chopstick},
     :hotdog => %w{hotdog dog sausage saussage american},
@@ -193,9 +193,22 @@ task :insert_health_ratings do
     pbar.inc
   end
 
-  @collection.ensure_index [["indexed_location", Mongo::GEO2D]]
   pbar.finish
 end
 
-task :default => [:download_health_ratings, :insert_health_ratings] do
+task :index do
+  @connection = Mongo::Connection.new
+  @db = @connection['fud']
+  @collection = @db['places']
+
+  fields_for_index = %w{business_name business_type address_line1 post_code rating_value rating_key formatted_address formatted_phone_number name rating website logo allergies.peanuts allergies.wheat allergies.tree_nuts}
+
+  fields_for_index.each do |f|
+    @collection.ensure_index [[f]]
+  end
+
+  @collection.ensure_index [["machine_location", Mongo::GEO2D]]
+end
+
+task :default => [:download_health_ratings, :insert_health_ratings, :index] do
 end

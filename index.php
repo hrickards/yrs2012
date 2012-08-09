@@ -6,33 +6,49 @@
 
 <?php
 include 'functions.php';
+$srchjson=$_GET['s'];
+
+if(!isset($_GET['s'])){
+	$srchjson = false;
+}else{
+	$srchjson = json_decode(stripslashes($srchjson));
+}
 
 $m = new Mongo('mongodb://178.79.184.102:27017');
 $db = $m->selectDB('fud');
 $col = $db->selectCollection('places');
-$cursorlimit = 8;
+$cursorlimit = 40;
+
 $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 
-for($i=1;$i<$cursorlimit+1;$i+=1){
+if(!isset($_GET['s'])){
+	$cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
+}else{
+	$cursor = $col->find($srchjson, array('_id' => 0))->limit($cursorlimit);
+}
+
+for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursorlimit+1));$i+=1){
 	$comp_diff = true;
 	$cur = $cursor->getNext();
 	$place_items .= '[\'<div class="infobox" >';
 	
 	$comp_items .= '<div class="compbox" >';
 	
-	add_field(true,'name', '<strong>'.addslashes($cur['name']).'</strong><hr/>');
+	add_field(true,'name', '<strong>'.addslashes($cur['name']).'</strong> ');
 	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
-	add_field(true,'googleplacesrating', '<strong>Google Places Rating: </strong>'.$cur['rating']);
-	add_field(true,'type','<strong>Type: </strong> '.$cur['business_type']);
-	add_field(false,'website','<strong>Website: </strong> '.$cur['website']);
-	add_field(false,'number', '<strong>Phone Number: </strong>'.$cur['formatted_phone_number']);
-	add_field(false,'intnumber', '<strong>Int. Phone Number: </strong>'.$cur['international_phone_number']);
-	add_field(true,'allergyinfo', '<strong>Allergy Information: </strong><br/>(no problem -> problematic)<br/>'.get_allergies($cur['allergies'],'img/allergy_enabled.png','img/allergy_disabled.png'));
-	add_field(false,'address','<strong>Address: </strong><br/>'.addslashes($cur['address_line1']).'<br/>'.addslashes($cur['address_line2']).'<br/>'.addslashes($cur['address_line3']).'<br/>'.addslashes($cur['address_line4']));
+	add_field(true,'googleplacesrating', get_stars('<strong>Google Places Rating: </strong> ('.$cur['rating'].') ', floor(intval($cur['rating_value'])),'img/star_enabled.png','img/star_disabled.png'));
+	add_field(true,'type','<strong>Type: </strong><br/>'.$cur['business_type']);
+	add_field(false,'website','<strong>Website: </strong><br/><a href="'.$cur['website'].'" >'.$cur['website'].'</a>');
+	add_field(false,'number', '<strong>Phone Number: </strong><br/>'.$cur['formatted_phone_number']);
+	add_field(false,'intnumber', '<strong>Int. Phone Number: </strong><br/>'.$cur['international_phone_number']);
+	if(count($cur['allergies'])>0){
+		add_field(true,'allergyinfo', '<strong>Allergy Information: </strong><br/>'.get_allergies($cur['allergies'],'img/warning_enabled.png','img/warning_disabled.png'));
+	}
+	add_field(false,'address','<strong>Address: </strong><br/>'.addslashes(str_replace(', ',',<br/>',$cur['formatted_address'])));
 	
 	$comp_items .= '</div>';
 	
-	$place_items .= '</div>\', '.$cur['location']['latitude'].', '.$cur['location']['longitude'].', '.$i.']';
+	$place_items .= '</div>\', '.$cur['location']['longitude'].', '.$cur['location']['latitude'].', '.$i.']';
 	if($i<$cursorlimit){
 		$place_items .= ','."\n";
 	}
@@ -60,6 +76,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:40px;width:100%;"></d
 	
 	<div class="search_box box">
 		<img src="img/fud_logo.png" />
+		<div id="search_div" ><form method="post" action="http://178.79.184.102:6969/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
 	</div>
   
 <div id="map" style="width:100%;height:100%;" ></div>
@@ -76,8 +93,14 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:40px;width:100%;"></d
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
-      center: new google.maps.LatLng(50.83483000000000, -0.20667300000000),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      center: new google.maps.LatLng(50.82483000000000, -0.18067500000000),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      styles:[{
+        featureType:"poi",
+        stylers:[{
+            visibility:"off"
+        }]
+      }]
     });
     
     var styles = [{

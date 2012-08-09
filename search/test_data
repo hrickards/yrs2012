@@ -1,0 +1,12 @@
+| query                                 | type         | filters | location         |
+| cheap fish and chips                  | fishandchips | cheap   |                  |
+| pizza take-away                       | italian      |         |                  |
+| pizza takeaway                        | italian      |         |                  |
+| italian restaurant                    | italian      |         |                  |
+| pizza takeout                         | italian      |         |                  |
+| pizza place                           | italian      |         |                  |
+| pizza near north road                 | italian      |         | north road       |
+| cheap pizza place                     | italian      | cheap   |                  |
+| cheap pizza place near north road     | italian      | cheap   | north road       |
+| find some pasta near brighton station | italian      |         | brighton station |
+| pizza that's nut-free                 | italian      | nutfree |                  |
