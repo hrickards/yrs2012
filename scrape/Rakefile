@@ -37,7 +37,7 @@ def string_suggests_type(str)
     :mcdonalds => %w{mcdonalds maccy ds mcd donald mc donalds},
     :bbq => %w{bbq barbecue grill},
     :coffee => %w{coffee cofe starbucks costa nero republic tea},
-    :donoughts => %w{donoughts},
+    :donoughts => %w{doughnut donut},
     :cafe => %w{cafe kitchen cottage},
     :chinese => %w{chinese chineese bengal china mandarin hong kong shanghai noodle rice wok oriental orient tandoori po sing wing hing shaan shema sitar nishat nayeb maharani levante chopstick},
     :hotdog => %w{hotdog dog sausage saussage american},
