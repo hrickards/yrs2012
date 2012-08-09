@@ -193,7 +193,7 @@ task :insert_health_ratings do
     pbar.inc
   end
 
-  @collection.ensure_index [["indexed_location", Mongo::GEO2D]]
+  @collection.ensure_index [["machine_location", Mongo::GEO2D]]
   pbar.finish
 end
 
