@@ -193,9 +193,22 @@ task :insert_health_ratings do
     pbar.inc
   end
 
-  @collection.ensure_index [["machine_location", Mongo::GEO2D]]
   pbar.finish
 end
 
-task :default => [:download_health_ratings, :insert_health_ratings] do
+task :index do
+  @connection = Mongo::Connection.new
+  @db = @connection['fud']
+  @collection = @db['places']
+
+  fields_for_index = %w{business_name business_type address_line1 post_code rating_value rating_key formatted_address formatted_phone_number name rating website logo allergies.peanuts allergies.wheat allergies.tree_nuts}
+
+  fields_for_index.each do |f|
+    @collection.ensure_index [[f]]
+  end
+
+  @collection.ensure_index [["machine_location", Mongo::GEO2D]]
+end
+
+task :default => [:download_health_ratings, :insert_health_ratings, :index] do
 end
