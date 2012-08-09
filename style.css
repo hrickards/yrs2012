@@ -9,11 +9,12 @@ body {
 }
 
 .infobox {
-	width:400px;
+	width:370px;
 	height:400px;
 	padding:0px;
 	margin:0px;
 	color:#464646;
+	overflow-x: hidden;
 }
 
 .info_placename {
@@ -30,6 +31,12 @@ body {
 .starbox_trailer {
 	padding-top:2px;
 	padding-right:8px;
+	float:left;
+}
+
+.starbox_stars {
+	float:right;
+	margin-right:5px;
 }
 
 
@@ -44,7 +51,7 @@ body {
 .comparison_box {
 	position:absolute;
 	height:100%;
-	width:303px;
+	width:330px;
 	background-color:#5E5E5E;
 	color:#FFC16B;
 	overflow:auto;
@@ -53,7 +60,7 @@ body {
 	color:#FF9900;
 }
 .comp_placename strong {
-	color:#464646;
+	color:#FFC16B;
 }
 
 .comp_placename {
@@ -72,11 +79,11 @@ body {
 
 
 .compdiff1 {
-	background-color:#787878;
+	background-color:#808080;
 }
 
-.compdiff1 {
-	background-color:#787878;
+.compdiff2 {
+	background-color:#868686;
 }
 
 .compbox {
@@ -105,8 +112,32 @@ body {
 	padding:2px;
 }
 
+#search_div {
+	float:right;
+	width:400px;
+	margin-right:20px;
+	padding:0px;
+	margin-bottom:0px;
+}
+#search_div form {
+	margin:0px;
+	padding:0px;
+}
+#search_div form input {
+	width:400px;
+	height:26px;
+	font:normal 14px "Trebuchet MS", sans-serif !important;
+}
 
+.placeinfobox{
+	width:100%;
+	min-height:22px;
+}
 
+.compinfobox{
+	width:100%;
+	min-height:22px;
+}
 
 
 

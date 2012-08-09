@@ -1,0 +1,16 @@
+YRS Todo - Jon
+
+Get search to work!
+
+DONE -- Change dot icons on the allergy rating to warning signs to better illustrate the measurement.
+
+Link the comparison divs to the main map section's pins, so that once one is clicked it's pin on the map pops up with more info (more info being reviews and other stuff not shown in the 'quick view' comparison boxes)
+
+Add manual search criteria.
+
+Add some nice flashy jquery animation or something.
+
+Start work on the social media side, the ability to review and change your personal ratings of places yourself as a user, maybe even a comments system.
+
+Perhaps rewrite entire code in just JS and mongoDB with minimal PHP
+
