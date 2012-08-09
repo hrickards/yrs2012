@@ -116,8 +116,10 @@ class PlaceSearch
     query = { :type => type }
 
     query.merge! parse_pre_criteria(pre_criteria)
+    old_filters = query[:filters]
     query.merge! parse_criteria(criteria)
-
+    query[:filters] += old_filters
+    
     query
   end
 
