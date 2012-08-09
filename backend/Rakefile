@@ -8,7 +8,7 @@ require 'uri'
 require 'progressbar'
 
 XML_URL = "http://ratings.food.gov.uk/OpenDataFiles/FHRS875en-GB.xml"
-XML_PATH = "FHRS875en-GB.xml"
+XML_PATH = "/tmp/FHRS875en-GB.xml"
 ACCEPTABLE_TYPES = ["Take-Away", "Restaurant/Cafe/Canteen", "Pub/Club"]
 
 def to_string_array(string)

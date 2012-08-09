@@ -1,6 +1,5 @@
 require 'fast_stemmer'
 require 'text'
-require 'sinatra/base'
 require 'json'
 require 'uri'
 require 'open-uri'
@@ -25,12 +24,12 @@ def open_parse_table(file_name)
 end
 
 class PlaceSearch
-  RESTAURANT_TYPES = open_parse_table 'data/restaurant_types'
-  RESTAURANT_WORDS = open_parse_nested_array 'data/restaurant_words'
-  LOCATION_WORDS = open_parse_array 'data/location_words'
-  START_STOP_WORDS = open_parse_array 'data/start_stop_words'
-  STOP_STOP_WORDS = open_parse_array 'data/stop_stop_words'
-  IGNORE_MODIFIERS = open_parse_array 'data/ignore_modifiers'
+  RESTAURANT_TYPES = open_parse_table 'search_text/restaurant_types'
+  RESTAURANT_WORDS = open_parse_nested_array 'search_text/restaurant_words'
+  LOCATION_WORDS = open_parse_array 'search_text/location_words'
+  START_STOP_WORDS = open_parse_array 'search_text/start_stop_words'
+  STOP_STOP_WORDS = open_parse_array 'search_text/stop_stop_words'
+  IGNORE_MODIFIERS = open_parse_array 'search_text/ignore_modifiers'
 
   LEV_LENGTH_COEFFICIENT = 1/4
 
@@ -196,22 +195,5 @@ class PlaceSearch
     return [] if words.empty?
     last_restaurant_word_index = (0...words.length).map { |n| array_approx_includes(STEMMED_RESTAURANT_WORDS, words[0..n]) ? n : -1 }.max
     words[last_restaurant_word_index+1..-1]
-  end
-end
-
-class PlaceSearchApi < Sinatra::Base
-  post '/search' do
-    query = params[:query]
-    results = PlaceSearch.search_wrapper(query)
-    is_me = results['location']
-    results.delete 'location'
-
-    redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(query)}&q=#{URI.encode(results.to_json)}&me=#{is_me}"
-  end
-  
-  get '/search' do
-    results = PlaceSearch.search_wrapper(params[:query])
-    results.delete 'location'
-    results.to_json
   end
 end
