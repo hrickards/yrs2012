@@ -5,8 +5,8 @@ require 'sinatra/base'
 require_relative '../search/search'
 
 class FUDMobile < Sinatra::Base
-  post '/sms' do
-    content_type 'text/plain'
+  get '/sms' do
+    content_type :xml
 
     query = PlaceSearch.search_wrapper params[:body]
     puts query.inspect
@@ -20,6 +20,11 @@ class FUDMobile < Sinatra::Base
 
     results = results.map { |p| "#{p["business_name"]}, near #{p["address_line1"]}" }.join "\n"
 
-    header + results
+    twiml = <<EOF
+<?xml version="1.0" encoding="UTF-8" ?>  
+<Response> 
+  <Sms>#{header + results}</Sms>
+</Response>
+EOF
   end
 end
