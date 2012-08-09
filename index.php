@@ -111,10 +111,14 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 
 <div id = "introbox" style="visibility:none;">
 	<div id = "introbox_inner" style="position:relative;visibility:none;" class="intro_box">
+		<img id="close_intro_button" ></img>
+		
 		<div style="width:100%; text-align:center;">
 		<img src="img/fud_logo_large.png" /><br/>
-			tell FÜD what you want:<br/>
-		</div>
+			<font id = "ask_box" >what do you want to eat?</font><br/><br/>
+				<div><form id="searchform_intro" method="post" action="http://178.79.184.102:6969/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form></div>
+			<font id = "explanation_box" >e.g. "Indian Takeaway Near Me" or<br/>"Indian Takeaway Near Brighton Marina"<br/>("near me" tells Fud to automatically detect your location)</font>
+			</div>
 	</div>
 </div>
 	
