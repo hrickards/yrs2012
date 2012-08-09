@@ -6,6 +6,7 @@
 body {
 	margin:0px;
 	font:normal 14px "Trebuchet MS", sans-serif !important;
+	overflow:hidden;
 }
 
 .infobox {
@@ -44,17 +45,31 @@ body {
 	z-index:9999;
 }
 
-.intro_box {
+#introbox{
 	position:absolute;
+	left:380px;
+	z-index:99999;
+	background-image:url("img/overlay-bg.png");
+}
+
+.intro_box {
+	width:400px;
+	min-height:200px;
+	background-color:#464646;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	padding:8px;
 }
 
 .comparison_box {
 	position:absolute;
-	height:100%;
+	padding-top:10px;
+	padding-bottom:10px;
+	overflow:auto;
 	width:330px;
 	background-color:#5E5E5E;
 	color:#FFC16B;
-	overflow:auto;
+	z-index:999999;
 }
 .comparison_box strong {
 	color:#FF9900;
@@ -104,6 +119,7 @@ body {
 	color:#DF7000;
 	padding-top:5px;
 	padding-bottom:0px;
+	z-index:9999999;
 }
 
 .allergy_item {
