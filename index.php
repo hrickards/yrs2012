@@ -59,8 +59,8 @@ if(!isset($_GET['s'])){
 	$srchjson = json_decode(stripslashes($srchjson));
 }
 
-$m = new Mongo('mongodb://178.79.184.102:27017');
-$db = $m->selectDB('fud');
+$m = new Mongo('mongodb://heroku_app6583922:9o7p80dd1kabf1sc22huu9ot0m@ds037077-a.mongolab.com:37077');
+$db = $m->selectDB('heroku_app6583922');
 $col = $db->selectCollection('places');
 $cursorlimit = 40;
 
@@ -116,7 +116,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 		<div style="width:100%; text-align:center;">
 		<img src="img/fud_logo_large.png" /><br/>
 			<font id = "ask_box" >what do you want to eat?</font><br/><br/>
-				<div><form id="searchform_intro" method="post" action="http://178.79.184.102:6969/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form></div>
+				<div><form id="searchform_intro" method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form></div>
 			<font id = "explanation_box" >e.g. "Indian Takeaway Near Me" or<br/>"Indian Takeaway Near Brighton Marina"<br/>("near me" tells Fud to automatically detect your location)</font>
 			</div>
 	</div>
@@ -130,7 +130,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 	
 	<div id="searchbox" class="search_box box">
 		<img src="img/fud_logo.png" />
-		<div id="search_div" style="visibility:none;" ><form method="post" action="http://178.79.184.102:6969/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
+		<div id="search_div" style="visibility:none;" ><form method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
 	</div>
   
 <div id="map" style="position:absolute;left:330px;width:400px;height:100%;z-index:10;" ></div>
