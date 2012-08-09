@@ -5,11 +5,12 @@ require 'sinatra/base'
 require_relative '../search/search'
 
 class FUDMobile < Sinatra::Base
-  get '/sms' do
+  post '/sms' do
     content_type 'text/plain'
 
     query = PlaceSearch.search_wrapper params[:body]
-    humanised_query = "#{query[:icon]} " if query[:icon]
+    puts query.inspect
+    humanised_query = "#{query[:logo]} " if query[:logo]
     header = "FUD found you the following #{humanised_query}restaurants:\n"
 
     @connection = Mongo::Connection.new
