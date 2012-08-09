@@ -177,6 +177,7 @@ class PlaceSearch
   end
 
   def self.create_location_criteria(location_criteria)
+    return { 'location' => 'me' } if location_criteria == 'me'
     location_criteria << ', Brighton'
 
     base = "http://maps.googleapis.com/maps/api/geocode/json"
@@ -267,10 +268,17 @@ end
 
 class PlaceSearchApi < Sinatra::Base
   post '/search' do
-    redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(PlaceSearch.search_wrapper(params[:query]).to_json)}"
+    query = params[:query]
+    results = PlaceSearch.search_wrapper(query)
+    is_me = results['location']
+    results.delete 'location'
+
+    redirect "http://localhost:8888/yrs2012/?s=#{URI.encode(query)}&q=#{URI.encode(results.to_json)}&me=#{is_me}"
   end
   
   get '/search' do
-    PlaceSearch.search_wrapper(params[:query]).to_json
+    results = PlaceSearch.search_wrapper(params[:query])
+    results.delete 'location'
+    results.to_json
   end
 end
