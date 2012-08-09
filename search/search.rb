@@ -118,7 +118,7 @@ class PlaceSearch
     query.merge! parse_pre_criteria(pre_criteria)
     old_filters = query[:filters]
     query.merge! parse_criteria(criteria)
-    query[:filters] += old_filters if query[:filters]
+    query[:filters] += old_filters if query[:filters] and old_filters
     
     query
   end
