@@ -1,0 +1,76 @@
+| search         | restaurant_type |
+| pizza          | italian         |
+| italian        | italian         |
+| pasta          | italian         |
+| mcdonalds      | mcdonalds       |
+| maccy ds       | mcdonalds       |
+| mcd            | mcdonalds       |
+| donald         | mcdonalds       |
+| mc donalds     | mcdonalds       |
+| bbq            | bbq             |
+| barbecue       | bbq             |
+| grill          | bbq             |
+| coffee         | coffee          |
+| cofe           | coffee          |
+| starbucks      | coffee          |
+| costa          | coffee          |
+| nero           | coffee          |
+| republic       | coffee          |
+| tea            | coffee          |
+| doughnut       | donoughts       |
+| donut          | donoughts       |
+| cafe           | cafe            |
+| kitchen        | cafe            |
+| cottage        | cafe            |
+| breakfast      | cafe            |
+| chinese        | chinese         |
+| chineese       | chinese         |
+| bengal         | chinese         |
+| china          | chinese         |
+| mandarin       | chinese         |
+| hong kong      | chinese         |
+| oriental       | chinese         |
+| tandoori       | chinese         |
+| hotdog         | hotdog          |
+| hot dog        | hotdog          |
+| hot dogs       | hotdog          |
+| sausage        | hotdog          |
+| sausages       | hotdog          |
+| american       | hotdog          |
+| burger         | burger          |
+| burgers        | burger          |
+| organic        | organic         |
+| salad          | organic         |
+| salads         | organic         |
+| chicken        | chicken         |
+| meat           | chicken         |
+| beef           | chicken         |
+| lamb           | chicken         |
+| pork           | chicken         |
+| nandos         | chicken         |
+| nando          | chicken         |
+| kfc            | chicken         |
+| pizza          | pizza           |
+| pizzas         | pizza           |
+| steak          | steak           |
+| steaks         | steak           |
+| fish and chips | fish_and_chips  |
+| cod            | fish_and_chips  |
+| fish           | fish_and_chips  |
+| chips          | fish_and_chips  |
+| chip           | fish_and_chips  |
+| indian         | indian          |
+| curry          | indian          |
+| sandwich       | sandwich        |
+| sandwiches     | sandwich        |
+| pret a manger  | sandwich        |
+| thai           | thai            |
+| tex mex        | tex_mex         |
+| texan          | tex_mex         |
+| mexican        | tex_mex         |
+| bar            | bar             |
+| tavern         | bar             |
+| pub            | bar             |
+| inn            | bar             |
+| public house   | bar             |
+| ice cream      | ice_cream       |

@@ -12,92 +12,25 @@ class Regexp
   end
 end
 
+def open_parse_array(file_name)
+  open(file_name).read.split("\n")
+end
+
+def open_parse_nested_array(file_name)
+  open_parse_array(file_name).map { |l| l.split(" ") }
+end
+
+def open_parse_table(file_name)
+  Hash[open(file_name).read.split("\n").map { |l| l.split("|").map { |c| c.lstrip.strip }[1..-1] }]
+end
+
 class PlaceSearch
-  RESTAURANT_TYPES = {
-    'pizza' => 'italian',
-    'italian' => 'italian',
-    'pasta' => 'italian',
-    'cafe' => 'italian',
-    'fish and chips' => 'fish_and_chips',
-
-    'mcdonalds' => 'mcdonalds',
-    'maccy ds' => 'mcdonalds',
-    'mcd' => 'mcdonalds',
-    'donald' => 'mcdonalds',
-    'mc donalds' => 'mcdonalds',
-
-    'bbq' => 'bbq',
-    'barbecue' => 'bbq',
-    'grill' => 'bbq',
-
-    'coffee' => 'coffee',
-    'cofe' => 'coffee',
-    'starbucks' => 'coffee',
-    'costa' => 'coffee',
-    'nero' => 'coffee',
-    'republic' => 'coffee',
-    'tea' => 'coffee',
-
-    'doughnut' => 'donoughts',
-    'donut' => 'donoughts',
-
-    'cafe' => 'cafe',
-    'kitchen' => 'cafe',
-    'cottage' => 'cafe',
-
-    'chinese' => 'chinese',
-    'chineese' => 'chinese',
-    'bengal' => 'chinese',
-    'china' => 'chinese',
-    'mandarin' => 'chinese',
-    'hong kong' => 'chinese',
-    'shanghai' => 'chinese',
-    'oriental' => 'chinese',
-    'tandoori' => 'chinese',
-
-    'hotdog' => 'hotdog',
-    'hotdogs' => 'hotdog',
-    'sausage' => 'hotdog',
-    'sausages' => 'hotdog',
-    'american' => 'hotdog',
-
-    'burger' => 'burger',
-    'burgers' => 'burger',
-    
-    'organic' => 'organic',
-    'salad' => 'organic',
-    'salads' => 'organic',
-
-    'chicken' => 'chicken',
-    'chickens' => 'chicken',
-    'meat' => 'chicken',
-    'beef' => 'chicken',
-    'lamb' => 'chicken',
-    'pork' => 'chicken',
-    'nandos' => 'chicken',
-    'nando' => 'chicken',
-    'kfc' => 'chicken',
-
-    'pizza' => 'pizza',
-    'pizzas' => 'pizza',
-
-    'steak' => 'steak',
-    'steaks' => 'steak',
-
-    'cod' => 'fish_and_chips',
-    'fish' => 'fish_and_chips',
-    'chips' => 'fish_and_chips',
-    'chip' => 'fish_and_chips',
-
-    'indian' => 'indian',
-    'curry' => 'indian'
-  }
-
-  RESTAURANT_WORDS = [["restaurant"], ["place"], ["takeout"], ["take", "out"], ["take", "away"], ["takeaway"], ["shop"]]
-  LOCATION_WORDS = %w{near located by}
-  START_STOP_WORDS = %w{find search me a an one some few}
-  STOP_STOP_WORDS = %w{that is also that's}
-  IGNORE_MODIFIERS = %w{very relatively quite really some pretty}
+  RESTAURANT_TYPES = open_parse_table 'data/restaurant_types'
+  RESTAURANT_WORDS = open_parse_nested_array 'data/restaurant_words'
+  LOCATION_WORDS = open_parse_array 'data/location_words'
+  START_STOP_WORDS = open_parse_array 'data/start_stop_words'
+  STOP_STOP_WORDS = open_parse_array 'data/stop_stop_words'
+  IGNORE_MODIFIERS = open_parse_array 'data/ignore_modifiers'
 
   LEV_LENGTH_COEFFICIENT = 1/4
 
