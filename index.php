@@ -3,6 +3,8 @@
 
 <meta charset="utf-8" />
 
+<meta name="robots" value="none" />
+
 <title>F&#252;d</title> 
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
@@ -12,6 +14,7 @@
 <script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="js/jquery.mCustomScrollbar.js"></script>
+ <script type="text/javascript" src="http://www.google.com/jsapi?key=AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM"></script>
 
 <script>
 
@@ -22,6 +25,7 @@ function updateResizeDiv(){
 	$('#introbox').css('left',$('#comparebox').width());
 	$('#introbox').css('height',mapheighter);
 	$('#map').css('width',mapwidther);
+	google.maps.event.trigger(map, 'resize');
 	$('#map').css('left',$('#comparebox').width());
 	$('#map').css('height',mapheighter);
 	$('#introbox_inner').css('left',((mapwidther/2)-($('#introbox_inner').width()/2)));
@@ -29,18 +33,12 @@ function updateResizeDiv(){
 	$('#comparebox').css('height',$(window).height()-$('#searchbox').height()-25);
 }
 
-function checkintro(){
-	var introcookie = $.cookie("fud_introscreen");
-	if(introcookie != 'true'){
-		$('#introbox').fadeIn();
-		//$.cookie("fud_introscreen", "true", { path: "/", expires: 7 });
-	}else{
-		$('#search_div').fadeIn();
-	}
-}
-
 function init_jsfud(){
-	checkintro();
+	<?php
+		if(!isset($_GET['q'])){
+			echo '$("#introbox").fadeIn();';
+		}
+	?>
 	updateResizeDiv();
 	$("#comparebox").mCustomScrollbar();
 	$('#introbox_inner').delay(800).fadeIn();
@@ -66,7 +64,7 @@ $cursorlimit = 40;
 
 $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 
-if(!isset($_GET['s'])){
+if(!isset($_GET['q'])){
 	$cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 }else{
 	$cursor = $col->find($srchjson, array('_id' => 0))->limit($cursorlimit);
@@ -109,8 +107,8 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 <body onload="init_jsfud();" >
 
 
-<div id = "introbox" style="visibility:none;">
-	<div id = "introbox_inner" style="position:relative;visibility:none;" class="intro_box">
+<div id = "introbox" style="display:none;">
+	<div id = "introbox_inner" style="position:relative;" class="intro_box">
 		<img id="close_intro_button" ></img>
 		
 		<div style="width:100%; text-align:center;">
@@ -130,7 +128,12 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 	
 	<div id="searchbox" class="search_box box">
 		<img src="img/fud_logo.png" />
-		<div id="search_div" style="visibility:none;" ><form method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
+		<div id="search_div" style="
+		<?php
+		if(!isset($_GET['q'])){
+			echo 'visibility:hidden;';
+		}
+		?>" ><form method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
 	</div>
   
 <div id="map" style="position:absolute;left:330px;width:400px;height:100%;z-index:10;" ></div>
@@ -147,7 +150,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
-      center: new google.maps.LatLng(50.82483000000000, -0.18067500000000),
+      center: new google.maps.LatLng(50.82253,-0.137163),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       styles:[{
         featureType:"poi",
