@@ -69,6 +69,7 @@ $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 if(!isset($_GET['s'])){
 	$cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 }else{
+  print_r($srchjson);
 	$cursor = $col->find($srchjson, array('_id' => 0))->limit($cursorlimit);
 }
 
