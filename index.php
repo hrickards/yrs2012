@@ -56,6 +56,9 @@ $srchjson=$_GET['s'];
 if(!isset($_GET['s'])){
 	$srchjson = false;
 }else{
+  var_dump($srchjson);
+  var_dump(stripslashes($srchjson));
+  var_dump(json_decode(stripslashes($srchjson)));
 	$srchjson = json_decode(stripslashes($srchjson));
 }
 
