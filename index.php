@@ -51,14 +51,11 @@ $(window).resize(updateResizeDiv);
 </script>
 <?php
 include 'functions.php';
-$srchjson=$_GET['s'];
+$srchjson=$_GET['q'];
 
-if(!isset($_GET['s'])){
+if(!isset($_GET['q'])){
 	$srchjson = false;
 }else{
-  var_dump($srchjson);
-  var_dump(stripslashes($srchjson));
-  var_dump(json_decode(stripslashes($srchjson)));
 	$srchjson = json_decode(stripslashes($srchjson));
 }
 
