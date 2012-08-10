@@ -177,8 +177,15 @@ body {
 	margin-left: 47px;
 }
 
+#manual_searchdiv {
+	color:#FFC16B;
+	font-size:10px;
+	cursor:pointer;
+}
 
-
+#manual_searchdiv:hover {
+	color:#FFDBA9;
+}
 
 
 

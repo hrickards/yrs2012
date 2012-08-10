@@ -124,7 +124,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 		<div style="width:100%; text-align:center;">
 		<img src="img/fud_logo_large.png" /><br/>
 			<font id = "ask_box" >what do you want to eat?</font><br/><br/>
-				<div><form id="searchform_intro" method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form></div>
+				<div><form id="searchform_intro" method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form><div id="manual_searchdiv" style="position:absolute;top:163px;left:58px" >+ manual search</div></div>
 			<font id = "explanation_box" >e.g. "Indian Takeaway Near Me" or<br/>"Indian Takeaway Near Brighton Marina"<br/>("near me" tells Fud to automatically detect your location)</font>
 			</div>
 	</div>
@@ -218,7 +218,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 
     google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          infowindow.setContent('That\'s you that is!');
+          infowindow.setContent('That\'s <a href = "http://www.youtube.com/watch?v=aEQcsuXnnnc" target="_blank" >you</a> that is,</br>that\'s your favourite <a href = "http://www.youtube.com/watch?v=IzdI_PecYx0" target="_blank" >food</a>.');
           infowindow.open(map, marker);
         }
     })(marker, i));
@@ -236,7 +236,7 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          infowindow.setContent(locations[i][0]);
+          infowindow.setContent(stripslashes(locations[i][0]));
           infowindow.open(map, marker);
         }
       })(marker, i));
