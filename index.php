@@ -41,6 +41,10 @@ function init_jsfud(){
 	?>
 	updateResizeDiv();
 	$("#comparebox").mCustomScrollbar();
+	$(".infobox").each(
+	function (i,elem) {
+		elem.mCustomScrollbar();
+	});
 	$('#introbox_inner').delay(800).fadeIn();
 }
 
@@ -51,16 +55,22 @@ $(window).resize(updateResizeDiv);
 include 'functions.php';
 $srchjson=$_GET['q'];
 
+$frompos = false;
+
 if(!isset($_GET['q'])){
 	$srchjson = false;
+	$cursorlimit = 5;
 }else{
 	$srchjson = json_decode(stripslashes($srchjson));
+	if(isset($srchjson->machine_location)){
+		$frompos = reset($srchjson->machine_location);
+	}
+	$cursorlimit = 40;
 }
 
 $m = new Mongo('mongodb://heroku_app6583922:9o7p80dd1kabf1sc22huu9ot0m@ds037077-a.mongolab.com:37077/heroku_app6583922');
 $db = $m->selectDB('heroku_app6583922');
 $col = $db->selectCollection('places');
-$cursorlimit = 40;
 
 $cursor = $col->find(array(), array('_id' => 0))->limit($cursorlimit);
 
@@ -81,7 +91,7 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
 	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
 	add_field(true,'googleplacesrating', get_stars('<strong>Google Places Rating: </strong> ('.$cur['rating'].') ', floor(intval($cur['rating_value'])),'img/star_enabled.png','img/star_disabled.png'));
 	add_field(true,'type','<strong>Type: </strong><br/>'.$cur['business_type']);
-	add_field(false,'website','<strong>Website: </strong><br/><a href="'.$cur['website'].'" >'.$cur['website'].'</a>');
+	add_field(false,'website','<strong>Website: </strong><br/><a target="_blank" href="'.$cur['website'].'" >'.$cur['website'].'</a>');
 	add_field(false,'number', '<strong>Phone Number: </strong><br/>'.$cur['formatted_phone_number']);
 	add_field(false,'intnumber', '<strong>Int. Phone Number: </strong><br/>'.$cur['international_phone_number']);
 	if(count($cur['allergies'])>0){
@@ -150,7 +160,13 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
-      center: new google.maps.LatLng(50.82253,-0.137163),
+      center: new google.maps.LatLng(<?php
+      if($frompos){
+      	echo $frompos['1'].','.$frompos['0'];
+      }else{
+		echo '50.82253,-0.137163';
+	  }
+      ?>),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       styles:[{
         featureType:"poi",
@@ -169,16 +185,53 @@ $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></di
       ]
     }];
     
+    var markericon_pizza = new google.maps.MarkerImage('img/marker_pizza-alt.png',
+        new google.maps.Size(20, 40),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 40)
+    );
+	
+	
+	var markericon_me = new google.maps.MarkerImage('img/marker_me.png',
+        new google.maps.Size(20, 40),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 40)
+    );
+	
+    
     map.setOptions({styles: styles});
 
     var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
+    var marker, i, ibase;
+    ibase=0;
+    <?php
+    if($frompos){
+    ?>
+    
+    ibase = 1;
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(<?php echo $frompos['1'].','.$frompos['0']; ?>),
+        map: map,
+        icon: markericon_me
+    });
 
-    for (i = 0; i < locations.length; i++) {  
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent('That\'s you that is!');
+          infowindow.open(map, marker);
+        }
+    })(marker, i));
+    
+    <?php
+    }
+    ?>
+
+    for (i = ibase; i < locations.length; i++) {  
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-        map: map
+        map: map,
+        icon: markericon_pizza
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
