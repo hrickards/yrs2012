@@ -22,7 +22,7 @@ body{background-color:#787878}
 	top: 35%;
 	right: 4%;
 }
-#Text {
+#searchbox {
 	color:#F63
 	background-color: #282828;
 	position: absolute;
@@ -61,8 +61,11 @@ body{background-color:#787878}
 <img src="../../../Unnamed Site 2/fancy2.png" id="Fancyy" />
 <img src="../../../Unnamed Site 2/title.png" id="Titlee" />
 <form id="form1" name="form1" method="post" action="">
-  <label for="Text"></label>
-  <input name="Text" type="text" id="Text" value="Enter a search query and press enter..." />
+<div id="searchbox"
+class="search_box box">
+		<div id="search_div" style="
+		visibility:visible;" ><form method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
+	</div>  
   <a href="APPCAT.html"><img src="../../../Unnamed Site 2/category2.png" name="Category" id="Category" /></a>
   <img src="../../../Unnamed Site 2/bar.png" id="Bar" />
 </form>
