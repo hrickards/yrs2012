@@ -15,9 +15,12 @@
 <script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
 <script type="text/javascript" src="js/jquery.mCustomScrollbar.js"></script>
  <script type="text/javascript" src="http://www.google.com/jsapi?key=AIzaSyA4_MbXZb7jP5e9luRnPZRzZuvJOMyRuVM"></script>
+<script type="text/javascript" src="js/decode.js"></script> 
 <?php
 if(isset($_GET['PHONEMODE'])){
+?>
 	<link rel="stylesheet" type="text/css" href="phone.css" />
+<?php
 }
 ?>
 <script>
@@ -134,9 +137,35 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
 		add_script('function loadDirectionsFor'.$i.'(){
 			$.get("getdirections.php?olong='.$frompos['1'].'&olat='.$frompos['0'].'&nlong='.$cur['location']['longitude'].'&nlat='.$cur['location']['latitude'].'", function(data) {
 				
-				data = data.split("|");
+				data = data.split("\n");
 				$("#directionsdiv_'.($i+1).'").html(data[0]);
-			
+
+        var coords = [];
+
+        for(var i=0; i < data.length-1; i++) {
+          var a = decode(data[i]);
+          for(var j=0; j < a.length; j++) {
+            coords.push(a[j]);
+          }
+        }
+
+        var points = [];
+
+        for(var j = 0; j < coords.length; j++) {
+          if(coords[j][0] < 200 && coords[j][1] < 200 && coords[j][0] > 40 && coords[j][1] > -200) {
+            points.push(new google.maps.LatLng(coords[j][0], coords[j][1]));;
+          }
+        }
+
+        var polyline = new google.maps.Polyline({
+          path: points,
+          strokeColor: "#FF0000",
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          map: map
+        });
+
+        polyline.setMap(map);
 			});
 		}
 		funcarr['.$i.'] = loadDirectionsFor'.$i.';');

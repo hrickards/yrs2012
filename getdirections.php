@@ -69,7 +69,9 @@ foreach($further as &$direction){
 	echo '<br/>';
 }
 echo '</div>';
-echo '|';
-echo $direct->routes[0]->legs[0]->steps[1]->polyline->points;
+foreach($further as &$direction){
+  echo "\n";
+  echo $direction->polyline->points;
+}
 
 ?>
