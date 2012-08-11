@@ -109,6 +109,7 @@ body {
 	padding-top:8px;
 	padding-bottom:8px;
 	background-color:#787878;
+	cursor:pointer;
 }
 
 .search_box {
@@ -187,5 +188,30 @@ body {
 	color:#FFDBA9;
 }
 
+.loaddirectionsdiv {
+	color:#FFC16B;
+	font-size:14px;
+	cursor:pointer;
+}
 
+.loaddirectionsdiv:hover {
+	color:#FFDBA9;
+}
 
+#introbox_inner_manual{
+	width:600px;
+	min-height:300px;
+	background-color:#464646;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	padding:8px;
+	padding-bottom:20px;
+}
+
+.compbox:hover {
+	background-color:#8B8B8B;
+}
+
+.selected {
+	background-color:#9E9E9E !important;
+}
