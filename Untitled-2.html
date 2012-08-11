@@ -63,7 +63,7 @@ function stripslashes(str) {
 
 </head>
 
-<body onload="init_jsfud();" >
+<body onLoad="init_jsfud();" >
 
 
 <div id = "introbox" style="display:none;">
@@ -71,7 +71,6 @@ function stripslashes(str) {
 		<img id="close_intro_button" ></img>
 		
 		<div style="width:100%; text-align:center;">
-		<img src="img/fud_logo_large.png" /><br/>
 			<font id = "ask_box" >what do you want to eat?</font><br/><br/>
 
 				<div><form id="searchform_intro" method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input id="searchbox_intro" type="text" name="query" placeholder="Enter a search query and press enter..." ></input><input type="submit" style="height:0px;width:0px;visibility:hidden;"></input></form><div id="manual_searchdiv" style="position:absolute;top:163px;left:58px" >+ manual search</div></div>
@@ -85,7 +84,6 @@ function stripslashes(str) {
 
 	
 	<div id="searchbox" class="search_box box">
-		<img src="img/fud_logo.png" />
 		<div id="search_div" style="
 		visibility:hidden;" ><form method="post" action="http://infinite-island-5869.herokuapp.com/search" ><input type="text" name="query" placeholder="Enter new search query and press enter..." ></input><input type="submit" style="visibility:hidden;"></input></form></div>
 	</div>
