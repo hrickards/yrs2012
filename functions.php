@@ -1,29 +1,12 @@
 
 <script type="text/javascript">
 
-function set_cookie(name, value, expires, path, domain, secure){
-	if (!expires){expires = new Date()}
-	document.cookie = name + "=" + escape(value) + 
-	((expires == null) ? "" : "; expires=" + expires.toGMTString()) +
-	((path == null) ? "; path=/" : "; path=" + path) +
-	((domain == null) ? "" : "; domain=" + domain) +
-	((secure == null) ? "" : "; secure");
-}
-
-function get_cookie(name) {
-	var arg = name + "=";
-	var alen = arg.length; 
-	var clen = document.cookie.length;
-	var i = 0; 
-	while (i < clen) {
-		var j = i + alen;
-		if (document.cookie.substring(i, j) == arg){
-			return get_cookie_val(j); 
-		}
-		i = document.cookie.indexOf(" ", i) + 1;
-		if (i == 0) break;
-	}
-	return null;
+function stripslashes(str) {
+	str=str.replace(/\\'/g,'\'');
+	str=str.replace(/\\"/g,'"');
+	str=str.replace(/\\0/g,'\0');
+	str=str.replace(/\\\\/g,'\\');
+	return str;
 }
 
 </script>
@@ -81,7 +64,6 @@ function add_field($compare,$namer,$html){
 		$comp_items .= '">'.stripslashes($html).'</div>';
 	}
 }
-
 
 
 ?>

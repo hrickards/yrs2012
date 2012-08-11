@@ -1,8 +1,12 @@
 YRS Todo - Jon
 
-Get search to work!
-
 DONE -- Change dot icons on the allergy rating to warning signs to better illustrate the measurement.
+
+HARRY -- Make search "NEAR ME" work with google API
+
+Add a directions system.
+
+draw node-like lines with animation for each pin. 	
 
 Link the comparison divs to the main map section's pins, so that once one is clicked it's pin on the map pops up with more info (more info being reviews and other stuff not shown in the 'quick view' comparison boxes)
 
