@@ -15,6 +15,7 @@ function stripslashes(str) {
 <?php
 $comp_items="";
 $place_items="";
+$script_items="";
 $comp_diff = true;
 
 function get_stars($trailer,$count,$starurl,$emptyurl){
@@ -30,6 +31,11 @@ function get_stars($trailer,$count,$starurl,$emptyurl){
 	}
 	$output .= '</div></div>';
 	return $output;
+}
+
+function add_script($script){
+	global $script_items;
+	$script_items .= $script;
 }
 
 function get_allergies($allarr,$starurl,$emptyurl){
@@ -63,6 +69,18 @@ function add_field($compare,$namer,$html){
 		}
 		$comp_items .= '">'.stripslashes($html).'</div>';
 	}
+}
+
+function get_directions($type,$fromlong,$fromlat,$tolong,$tolat){
+	$direct = file_get_contents('http://maps.googleapis.com/maps/api/directions/'.$type.'?origin='.$fromlong.','.$fromlat.'&destination='.$tolong.','.$tolat.'&sensor=false');
+	$direct = json_decode(stripslashes($direct));
+	$direct = $direct->routes['legs']['steps'];
+	$output = '<div class="directions_box">';
+	foreach($direct as &$direction){
+		$output .= $direction["html_instructions"].'<br/>';
+	}
+	$output .= '</div>';
+	return $output;
 }
 
 

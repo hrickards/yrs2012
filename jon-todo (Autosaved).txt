@@ -1,6 +1,6 @@
 YRS Todo - Jon
 
-Add a directions system. -- DONE BUT NEEDS POLYLINES!
+Add a directions system. -- DONE BUT NEEDS!
 
 DONE -- BUT MAYBE NEED TO AUTOSCROLL THE COMPARISON DIV -- Link the comparison divs to the main map section's pins, so that once one is clicked it's pin on the map pops up with more info (more info being reviews and other stuff not shown in the 'quick view' comparison boxes)
 
