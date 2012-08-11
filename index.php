@@ -121,19 +121,19 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
 	
 	');
 	
-	add_field(true,'name', '<strong>'.addslashes($cur['name']).'</strong> ');
-	add_field(true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
-	if($cur['rating']){add_field(true,'googleplacesrating', get_stars('<strong>Google Places Rating: </strong> ('.$cur['rating'].') ', floor(intval($cur['rating'])),'img/star_enabled.png','img/star_disabled.png'));};
-	add_field(true,'type','<strong>Type: </strong>'.$cur['business_type']);
-	add_field(false,'website','<strong>Website: </strong><br/><a target="_blank" href="'.$cur['website'].'" >'.$cur['website'].'</a>');
-	add_field(false,'number', '<strong>Phone Number: </strong><br/>'.$cur['formatted_phone_number']);
-	add_field(false,'intnumber', '<strong>Int. Phone Number: </strong><br/>'.$cur['international_phone_number']);
+	add_field(-1,true,'name', '<strong>'.addslashes($cur['name']).'</strong> ');
+	add_field(0,true,'rating', get_stars('<strong>Official Hygiene Rating: </strong>',intval($cur['rating_value']),'img/star_enabled.png','img/star_disabled.png'));
+	if($cur['rating']){add_field(0,true,'googleplacesrating', get_stars('<strong>Google Places Rating: </strong> ('.$cur['rating'].') ', floor(intval($cur['rating'])),'img/star_enabled.png','img/star_disabled.png'));};
+	add_field(1,true,'type','<strong>Type: </strong>'.$cur['business_type']);
+	add_field(1,false,'website','<strong>Website: </strong><br/><a target="_blank" href="'.$cur['website'].'" >'.$cur['website'].'</a>');
+	add_field(1,false,'number', '<strong>Phone Number: </strong><br/>'.$cur['formatted_phone_number']);
+	add_field(1,false,'intnumber', '<strong>Int. Phone Number: </strong><br/>'.$cur['international_phone_number']);
 	if(count($cur['allergies'])>0){
-		add_field(true,'allergyinfo', '<strong>Allergy Information: </strong><br/>'.get_allergies($cur['allergies'],'img/warning_enabled.png','img/warning_disabled.png'));
+		add_field(0,true,'allergyinfo', '<strong>Allergy Information: </strong><br/>'.get_allergies($cur['allergies'],'img/warning_enabled.png','img/warning_disabled.png'));
 	}
-	add_field(false,'address','<strong>Address: </strong><br/>'.addslashes(str_replace(', ',',<br/>',$cur['formatted_address'])));
+	add_field(2,false,'address','<strong>Address: </strong><br/>'.addslashes(str_replace(', ',',<br/>',$cur['formatted_address'])));
 	if($frompos){
-		add_field(false,'directions', '<strong>Directions: </strong><br/><div class="directionsdiv" id="directionsdiv_'.$i.'" >Loading directions...</div>');
+		add_field(2,false,'directions', '<strong>Directions: </strong><br/><div class="directionsdiv" id="directionsdiv_'.$i.'" >Loading directions...</div>');
 		add_script('function loadDirectionsFor'.$i.'(){
 			$.get("getdirections.php?olong='.$frompos['1'].'&olat='.$frompos['0'].'&nlong='.$cur['location']['longitude'].'&nlat='.$cur['location']['latitude'].'", function(data) {
 				
@@ -177,10 +177,16 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
 	
 	$comp_items .= '</div>';
 	
-	$place_items .= '</div>\', '.$cur['location']['longitude'].', '.$cur['location']['latitude'].', '.$i.']';
+	$place_items .= '</div>'
+	foreach($tabs as &$tab){
+		$tab .= '</div>';
+		$place_items .= $tab;
+	}
+	echo '\', '.$cur['location']['longitude'].', '.$cur['location']['latitude'].', '.$i.']';
 	if($i<$cursorlimit){
 		$place_items .= ','."\n";
 	}
+	
 }
 
 $comp_items .= '<div id = "compbox_spacer" style = "height:5px;width:100%;"></div>';

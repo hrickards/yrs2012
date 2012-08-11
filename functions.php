@@ -18,6 +18,8 @@ $place_items="";
 $script_items="";
 $comp_diff = true;
 
+$tabs = array('<div class="tab1 tab">','<div style="display:none;" class="tab2 tab">','<div style="display:none;" class="tab3 tab">');
+
 function get_stars($trailer,$count,$starurl,$emptyurl){
 	$output = "";
 	$output .= '<div class="starbox" >';
@@ -55,9 +57,13 @@ function get_allergies($allarr,$starurl,$emptyurl){
 	return $output;
 }
 
-function add_field($compare,$namer,$html){
+function add_field($tabno,$compare,$namer,$html){
 	global $comp_items,$place_items,$comp_diff;
-	$place_items .= '<div class="info_place'.$namer.' placeinfobox">'.addslashes($html).'</div><br/>';
+	if($tabno==-1){
+		$place_items .= '<div class="info_place'.$namer.' placeinfobox">'.addslashes($html).'</div><br/>';
+	}else{
+		$tabs[$tabno] .= '<div class="info_place'.$namer.' placeinfobox">'.addslashes($html).'</div><br/>';
+	}
 	if($compare){
 		$comp_items .= '<div class="comp_place'.$namer.' compinfobox ';
 		if($comp_diff){
