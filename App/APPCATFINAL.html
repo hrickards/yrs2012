@@ -27,7 +27,7 @@ body{background-color:#787878}
 	height: 8%;
 	width: 70%;
 	left: 15%;
-	top: 44%;
+	top: 36%;
 	right: 15%;
 	background-color: #282828;
 	border-top-style: 0;
@@ -36,25 +36,11 @@ body{background-color:#787878}
 	border-left-style: 0;
 	color: #efb15d;
 }
-#SelectTOP {
-	position: absolute;
-	height: 7%;
-	width: 49%;
-	left: auto;
-	top: 35%;
-	right: 15%;
-	background-color: #282828;
-	border-top-style: none;
-	border-right-style: none;
-	border-bottom-style: none;
-	border-left-style: none;
-	color: #efb15d;
-}
 #Select3 {
 	position: absolute;
 	width: 70%;
 	left: 15%;
-	top: 53%;
+	top: 46%;
 	right: 15%;
 	height: 8%;
 	background-color: #282828;
@@ -75,10 +61,10 @@ body{background-color:#787878}
 }
 #Bar {
 	position: absolute;
-	height: 17%;
+	height: 16%;
 	width: 40%;
 	left: 30%;
-	top: 82%;
+	top: 77%;
 	right: 30%;
 }
 #GPS {
@@ -95,11 +81,11 @@ body{background-color:#787878}
 	border-left-style: none;
 	color: #efb15d;
 }
-#EatIN {
+#EATin {
 	position: absolute;
 	height: 8%;
-	width: 33%;
-	top: 72%;
+	width: 70%;
+	top: 66%;
 	right: 15%;
 	background-color: #282828;
 	border-top-style: none;
@@ -113,7 +99,7 @@ body{background-color:#787878}
 	height: 8%;
 	width: 70%;
 	left: 15%;
-	top: 62%;
+	top: 56%;
 	right: 15%;
 	background-color: #282828;
 	color: #efb15d;
@@ -123,56 +109,43 @@ body{background-color:#787878}
 
 <body>
 <img src="../../../Unnamed Site 2/fancy2.png" id="Fancy">
-<select name="Select2" id="Select">
-  <option selected="selected">Choose a type...</option>
-  <option>Italian</option>
-  <option>Chinese</option>
-  <option>American</option>
-  <option>Indian</option>
-  <option>Japanese</option>
-  <option>Any</option>
-</select>
-
-<select name="Select" id="Select3">
-  <option selected="selected">Choose price...</option>
-  <option>Cheap</option>
-  <option>Expensive</option>
-  <option>Medium-prised</option>
-  <option>Any</option>
-</select>
 <img src="../../../Unnamed Site 2/title.png" id="Title"/>
-<input name="Select2" type="button" id="Select2" value="Take away" />
-<img src="../../../Unnamed Site 2/bar.png" id="Bar"/>
-<form id="form3" name="form3" method="post" action="">
-  <label for="Select4"></label>
-  <label for="Select3"></label>
 </form>
-<form id="form1" name="form1" method="post" action="">
-  <label for="Select"></label>
-</form>
-<form id="form2" name="form2" method="post" action="">
-  <label for="Select2"></label>
-</form>
-<form id="form4" name="form4" method="post" action="">
   <label for="SelectTOP"></label>
-  <input type="text" name="SelectTOP" id="SelectTOP" />
-</form>
 <form id="form5" name="form5" method="post" action="">
   <label>
-    <input type="submit" name="GPS" id="GPS" value="Use GPS" />
   </label>
-</form>
-<form id="form6" name="form6" method="post" action="">
-  <input type="submit" name="EatIN" id="EatIN" value="Eat in" />
-</form>
-<form id="form7" name="form7" method="post" action="">
+</form>  
+<form id="Form10" method="post" action="http://infinite-island-5869.herokuapp.com/search">
+<input type="image" src="../../../Unnamed Site 2/bar.png" id="Bar"/>
+<select name="type" id="Select">
+  <option selected="selected">Choose a type...</option>
+  <option value="italian">Italian</option>
+  <option value="chinese">Chinese</option>
+  <option value="american">American</option>
+  <option value="indian">Indian</option>
+  <option value="japanese">Japanese</option>
+  <option value="any">Any</option>
+</select>
+<select name="price" id="Select3">
+  <option selected="selected">Choose price...</option>
+  <option value="cheap">Cheap</option>
+  <option value="expensive">Expensive</option>
+  <option value="medium">Medium-prised</option>
+  <option value="any">Any</option>
+</select>
+  <label for="EATin"></label>
+  <select name="eatin" id="EATin">
+    <option value="eat">Eat in</option>
+    <option value="take">Take away</option>
+  </select>
   <label for="Label"></label>
-  <select name="Label" id="Label">
+  <select name="allergies" id="Label">
     <option selected="selected">Add allergies...</option>
-    <option>Lactose intollerant</option>
-    <option>Nuts intollerant</option>
-    <option>Wheat intollerant</option>
-    <option>None</option>
+    <option value="dairy">Lactose intollerant</option>
+    <option value="peanuts">Nuts intollerant</option>
+    <option value="wheat">Wheat intollerant</option>
+    <option value="">None</option>
   </select>
 </form>
 </body>
