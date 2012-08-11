@@ -157,7 +157,11 @@ for($i=1;$i < (($cursorlimit+1) > $cursor->count() ? $cursor->count() : ($cursor
           }
         }
 
-        var polyline = new google.maps.Polyline({
+        if(typeof(polyline) !== "undefined") {
+          polyline.setMap(null);
+        }
+
+        window.polyline = new google.maps.Polyline({
           path: points,
           strokeColor: "#FF0000",
           strokeOpacity: 1.0,
